@@ -398,7 +398,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 !openal32.dll
-!sfml-graphics-d-2.dll
+!\x64\Debug\sfml-graphics-d-2.dll
 !sfml-system-d-2.dll
 !sfml-window-d-2.dll
 !sfml-graphics-2.dll
