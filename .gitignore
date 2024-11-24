@@ -397,7 +397,7 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-!x64/Debug/openal32.dll
+!x64/Debug/openal32*
 !x64/Debug/sfml*
-!x64/Release/openal32.dll
+!x64/Release/openal32*
 !x64/Release/sfml*
