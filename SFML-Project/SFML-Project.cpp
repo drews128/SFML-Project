@@ -46,14 +46,35 @@ int main()
         break;
     }
 
+    //Some of the following code is based on the offical SFML documentation example (https://www.sfml-dev.org/documentation/2.6.2/)
     //Create window with SFML
-    Window window(VideoMode(960, 720), "Game Title", Style::Titlebar | Style::Close);
+    RenderWindow window(VideoMode(1440, 810), "Game Title", Style::Titlebar | Style::Close);
     //SFML input detection
     Event input_event;
 
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
+        //Detect user inputs
+        while (window.pollEvent(input_event)) {
 
+            //TODO: Detect user input
+
+            //Close the window if the close window button is pressed or the escape button is pressed
+            if (input_event.type == Event::Closed || input_event.type == Event::KeyPressed && input_event.key.code == Keyboard::Escape)
+                //Close the window
+                window.close();
+        }
+
+        //TODO: Main game logic goes here
+
+        //Render
+        //Clear the previous frame
+        window.clear();
+
+        //TODO: Main game rendering (drawing all of the objects) goes ehre
+
+        //Display the new frame
+        window.display();
     }
 
     return 1;
