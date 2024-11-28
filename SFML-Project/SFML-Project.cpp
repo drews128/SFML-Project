@@ -48,6 +48,7 @@ int main()
         break;
     }
 
+    //Level 1 array
     int level_1_size = 1;
     game_object** level_1 = new game_object * [level_1_size] {
         new game_object(50, 50, 50, 50, "Test", Color::Red)
