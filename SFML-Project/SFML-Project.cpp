@@ -54,8 +54,6 @@ int main()
         new game_object(50, 50, 50, 50, "Test", Color::Red)
     };
 
-
-
     //Some of the following code is based on the offical SFML documentation (https://www.sfml-dev.org/documentation/2.6.2/)
     //Create window with SFML
     RenderWindow window(VideoMode(1440, 810), "Game Title", Style::Titlebar | Style::Close);
