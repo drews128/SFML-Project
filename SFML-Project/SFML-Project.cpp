@@ -46,14 +46,20 @@ int main()
         break;
     }
 
-    //Some of the following code is based on the offical SFML documentation example (https://www.sfml-dev.org/documentation/2.6.2/)
+    //Some of the following code is based on the offical SFML documentation (https://www.sfml-dev.org/documentation/2.6.2/)
     //Create window with SFML
     RenderWindow window(VideoMode(1440, 810), "Game Title", Style::Titlebar | Style::Close);
     //SFML input detection
     Event input_event;
+    //Clock that records the time between each frame
+    Clock delta_clock;
+    //Time between each frame
+    //IMPORTANT: Make sure to mutliply any movement by delta so that it is frame independant!
+    Time delta;
 
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
+        
         //Detect user inputs
         while (window.pollEvent(input_event)) {
 
@@ -68,13 +74,16 @@ int main()
         //TODO: Main game logic goes here
 
         //Render
-        //Clear the previous frame
-        window.clear();
+        //Clear the previous frame and color the background with light blue
+        window.clear(Color(147, 248, 250));
 
-        //TODO: Main game rendering (drawing all of the objects) goes ehre
+        //TODO: Main game rendering (drawing all of the objects) goes here
 
         //Display the new frame
         window.display();
+
+        //Returns the time elapsed from the last restart (time between each frame)
+        delta = delta_clock.restart();
     }
 
     return 1;
