@@ -49,8 +49,9 @@ int main()
     }
 
     //Level 1 array
-    int level_1_size = 1;
+    int level_1_size = 2;
     game_object** level_1 = new game_object * [level_1_size] {
+        new player(320, 50, 50, 50, "Player", Color::Blue),
         new game_object(320, 610, 400, 100, "Platform", Color::Black)
     };
 
@@ -80,18 +81,26 @@ int main()
                 window.close();
         }
 
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
         //TODO: Main game logic goes here
 
+        //Run the update function for every object in the level
         for (int i = 0; i < level_1_size; i++) {
-            level_1[i]->update(delta.asMicroseconds());
+            //Call update function; convert microseconds to seconds
+            level_1[i]->update(delta.asMicroseconds() / static_cast<float>(1000000));
         }
+
+
+
+
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
         //Render
         //Clear the previous frame and color the background with light blue
         window.clear(Color(147, 248, 250));
 
-        //TODO: Main game rendering (drawing all of the objects) goes here
-
+        //Draw every object in the level
         for (int i = 0; i < level_1_size; i++) {
             window.draw(level_1[i]->get_shape());
         }

@@ -25,14 +25,18 @@ public:
 		set_color(color);
 	}
 
-	//Called every frame
-	virtual void update(int delta) {
-		
-	}
+	//Called every frame (delta is the time between frame in seconds)
+	virtual void update(float delta) {}
 
 	//Resets the position of the object
 	void reset_position() {
 		shape.setPosition(inital_position);
+	}
+
+	//Applys gravity to an object. Should only be called if an object should have gravity applied to it
+	virtual void apply_gravity(float delta) {
+		float fall_speed = 50;
+		shape.move(0, 9.8 * fall_speed * delta);
 	}
 
 	//Getters
@@ -50,4 +54,21 @@ public:
 	void set_size(float width, float height) { shape.setSize(Vector2f(width, height)); };
 	void set_type(string type) { this->type = type; };
 	void set_color(Color color) { shape.setFillColor(color); };
+};
+
+class player : public game_object {
+protected:
+	//TODO: Player variables go here
+public:
+	//Constructor
+	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {
+		//TODO: Player variables need to be set here
+	}
+
+	//TODO: override update function; pass through player input
+
+	//Override update function
+	void update(float delta) override {
+		apply_gravity(delta);
+	}
 };
