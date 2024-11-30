@@ -51,12 +51,13 @@ int main()
     //Level 1 array
     int level_1_size = 1;
     game_object** level_1 = new game_object * [level_1_size] {
-        new game_object(50, 50, 50, 50, "Test", Color::Red)
+        new game_object(320, 610, 400, 100, "Platform", Color::Black)
     };
 
     //Some of the following code is based on the offical SFML documentation (https://www.sfml-dev.org/documentation/2.6.2/)
     //Create window with SFML
     RenderWindow window(VideoMode(1440, 810), "Game Title", Style::Titlebar | Style::Close);
+    window.setFramerateLimit(60); //Set the framerate limit to 60fps
     //SFML input detection
     Event input_event;
     //Clock that records the time between each frame
