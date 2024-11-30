@@ -91,7 +91,10 @@ int main()
             level_1[i]->update(delta.asMicroseconds() / static_cast<float>(1000000));
         }
 
-
+        //Need collision detection. Check here: https://stackoverflow.com/questions/49616112/c-sfml-collision-detection-between-different-classes
+        //https://www.sfml-dev.org/tutorials/2.1/graphics-transform.php#bounding-boxes
+        //Iterate through every player and ground enemy in the level and check if it is colliding with any of the other objects
+        //Needs an on_collision(other_object) function on the game_object class
 
 
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
