@@ -16,7 +16,8 @@ int main()
     //Variables
     string player_name;
     int user_seleciton;
-    int current_level = 0;
+    int* current_level_size;
+    game_object*** current_level_array;
 
     //Inital message
     cout << "Welcome to [GAME TITLE GOES HERE]!" << endl;
@@ -32,13 +33,15 @@ int main()
 
         //TODO: Save player name to save file
 
-        current_level = 0;
+
 
         break;
     case 2:
         //Continue
 
         //TODO: Add continuing from save file
+
+
 
         break;
     default:
@@ -69,7 +72,8 @@ int main()
 
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
-        
+
+
         //Detect user inputs
         while (window.pollEvent(input_event)) {
 
@@ -80,6 +84,8 @@ int main()
                 //Close the window
                 window.close();
         }
+
+
 
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -97,7 +103,17 @@ int main()
         //Needs an on_collision(other_object) function on the game_object class
 
 
+        //TODO: Make a game manager class cause this is starting to get messy!
+
+
+        //Check for collisions between all objects
+        for (int i = 0; i < level_1_size; i++) {
+
+        }
+
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
 
         //Render
         //Clear the previous frame and color the background with light blue
