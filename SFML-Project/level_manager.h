@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <string>
 using namespace std;
 
@@ -46,10 +47,15 @@ public:
         return current_level_array;
     }
     //Setters
-    void set_current_level_size_ptr(int &level_size) {
-        current_level_size = &level_size;
-    }
-    void set_current_level_array_ptr(game_object** &level) {
-        current_level_array = &level;
+    void set_current_level(int level_id) {
+        switch (level_id) {
+        case 1:
+            current_level_size = &level_1_size;
+            current_level_array = &level_1;
+            break;
+        default:
+            cout << "Invalid Level ID: " << level_id << endl;
+            break;
+        }
     }
 };
