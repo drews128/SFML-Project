@@ -22,7 +22,7 @@ int main()
     game_object*** current_level_array;
 
     //Level manager
-    level_manager lvl_manager = level_manager();
+    level_manager levels = level_manager();
 
     //Inital message
     cout << "Welcome to [GAME TITLE GOES HERE]!" << endl;
@@ -38,7 +38,7 @@ int main()
 
         //TODO: Save player name to save file
 
-
+        levels.set_current_level(1);
 
         break;
     case 2:
@@ -46,7 +46,8 @@ int main()
 
         //TODO: Add continuing from save file
 
-
+        //Code for testing only, should be setting it to whatever the saved level id is
+        levels.set_current_level(1);
 
         break;
     default:
@@ -90,9 +91,9 @@ int main()
         //TODO: Main game logic goes here
 
         //Run the update function for every object in the level
-        for (int i = 0; i < level_1_size; i++) {
+        for (int i = 0; i < levels.get_current_level_size_ptr(); i++) {
             //Call update function; convert microseconds to seconds
-            level_1[i]->update(delta.asMicroseconds() / static_cast<float>(1000000));
+            levels.get_current_level_array_ptr()[i]->update(delta.asMicroseconds() / static_cast<float>(1000000));
         }
 
         //Need collision detection. Check here: https://stackoverflow.com/questions/49616112/c-sfml-collision-detection-between-different-classes

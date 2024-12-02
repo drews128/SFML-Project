@@ -28,7 +28,6 @@ public:
     //Constructor (default)
 	level_manager() = default;
 
-
     //Delete all of the levels. Called when the game is ended
     void delete_levels() {
         //Delete level arrays
@@ -40,10 +39,10 @@ public:
 
     //Getters & Setters (Does not include level arrays and sizes, those should never be changed at runtime.)
     //Getters
-    int* get_current_level_size_ptr() {
+    int get_current_level_size() {
         return current_level_size;
     }
-    game_object*** get_current_level_array_ptr() {
+    game_object*** get_current_level_array() {
         return current_level_array;
     }
     //Setters
