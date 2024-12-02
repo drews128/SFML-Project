@@ -90,11 +90,8 @@ int main()
 
         //TODO: Main game logic goes here
 
-        //Run the update function for every object in the level
-        for (int i = 0; i < levels.get_current_level_size_ptr(); i++) {
-            //Call update function; convert microseconds to seconds
-            levels.get_current_level_array_ptr()[i]->update(delta.asMicroseconds() / static_cast<float>(1000000));
-        }
+        //Run the update function for every object in the current level
+        levels.update_all_objects(delta);
 
         //Need collision detection. Check here: https://stackoverflow.com/questions/49616112/c-sfml-collision-detection-between-different-classes
         //https://www.sfml-dev.org/tutorials/2.1/graphics-transform.php#bounding-boxes
@@ -106,9 +103,7 @@ int main()
 
 
         //Check for collisions between all objects
-        for (int i = 0; i < level_1_size; i++) {
-
-        }
+        
 
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -119,8 +114,8 @@ int main()
         window.clear(Color(147, 248, 250));
 
         //Draw every object in the level
-        for (int i = 0; i < level_1_size; i++) {
-            window.draw(level_1[i]->get_shape());
+        for (int i = 0; i < levels.get_current_level_size(); i++) {
+            window.draw(levels.get_current_level_array()[0][i]->get_shape());
         }
 
         //Display the new frame
@@ -131,7 +126,7 @@ int main()
     }
 
     //Delete the level arrays
-    lvl_manager.delete_levels();
+    levels.delete_levels();
 
     return 1;
 }

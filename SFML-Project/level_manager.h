@@ -28,6 +28,16 @@ public:
     //Constructor (default)
 	level_manager() = default;
 
+    //Run update function for all objects in the current level
+    void update_all_objects(Time delta) {
+        for (int i = 0; i < *current_level_size; i++) {
+            //Call update function; convert microseconds to seconds
+            current_level_array[0][i]->update(delta.asMicroseconds() / static_cast<float>(1000000));
+        }
+    }
+
+    
+
     //Delete all of the levels. Called when the game is ended
     void delete_levels() {
         //Delete level arrays
@@ -40,7 +50,7 @@ public:
     //Getters & Setters (Does not include level arrays and sizes, those should never be changed at runtime.)
     //Getters
     int get_current_level_size() {
-        return current_level_size;
+        return *current_level_size;
     }
     game_object*** get_current_level_array() {
         return current_level_array;
