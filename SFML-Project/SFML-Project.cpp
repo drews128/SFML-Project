@@ -2,7 +2,9 @@
 #include <string>
 using namespace std;
 
+//Our files
 #include "game_objects.h"
+#include "level_manager.h"
 
 //SFML files
 #include "SFML/Graphics.hpp"
@@ -18,6 +20,9 @@ int main()
     int user_seleciton;
     int* current_level_size;
     game_object*** current_level_array;
+
+    //Level manager
+    level_manager lvl_manager = level_manager();
 
     //Inital message
     cout << "Welcome to [GAME TITLE GOES HERE]!" << endl;
@@ -50,13 +55,6 @@ int main()
         return -1;
         break;
     }
-
-    //Level 1 array
-    int level_1_size = 2;
-    game_object** level_1 = new game_object * [level_1_size] {
-        new player(320, 50, 50, 50, "Player", Color::Blue),
-        new game_object(320, 610, 400, 100, "Platform", Color::Black)
-    };
 
     //Some of the following code is based on the offical SFML documentation (https://www.sfml-dev.org/documentation/2.6.2/)
     //Create window with SFML
@@ -131,11 +129,8 @@ int main()
         delta = delta_clock.restart();
     }
 
-    //Delete level arrays
-    for (int i = 0; i < level_1_size; i++) {
-        delete level_1[i];
-    }
-    delete[] level_1;
+    //Delete the level arrays
+    lvl_manager.delete_levels();
 
     return 1;
 }
