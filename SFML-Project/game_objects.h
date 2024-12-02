@@ -28,6 +28,9 @@ public:
 	//Called every frame (delta is the time between frame in seconds)
 	virtual void update(float delta) {}
 
+	//Called every time a collision is detected by the level manager
+	virtual void on_collision(string type_of_other_object) {}
+
 	//Resets the position of the object
 	void reset_position() {
 		shape.setPosition(inital_position);
@@ -66,9 +69,13 @@ public:
 	}
 
 	//TODO: override update function; pass through player input
-
 	//Override update function
 	void update(float delta) override {
 		apply_gravity(delta);
+	}
+
+	//Override on collision function
+	void on_collision(string type_of_other_object) override{
+		cout << "Player is colliding with " << type_of_other_object << endl;
 	}
 };

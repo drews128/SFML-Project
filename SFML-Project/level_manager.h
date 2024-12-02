@@ -15,11 +15,12 @@ using namespace sf;
 class level_manager {
 private:
     //Current level pointer
-    int* current_level_size;
-    game_object*** current_level_array;
+    int* current_level_size = nullptr;
+    game_object*** current_level_array = nullptr;
 
     //Level 1 array
     int level_1_size = 2;
+    //IMPORTANT: Player should always be the first element in a level!
     game_object** level_1 = new game_object * [level_1_size] {
         new player(320, 50, 50, 50, "Player", Color::Blue),
         new game_object(320, 610, 400, 100, "Platform", Color::Black)
@@ -36,7 +37,22 @@ public:
         }
     }
 
-    
+    //Detects collisions between objects every frame
+    void detect_collisions() {
+        for (int i = 0; i < *current_level_size; i++) {
+            //Check for collisions with player
+            if (player* plyr = dynamic_cast<player*>(current_level_array[0][i])) {
+                //(This loop assumes the player is always the first element of a level)
+                for (int j = 1; j < *current_level_size; j++) {
+                    if (plyr->get_shape().getGlobalBounds().intersects(current_level_array[0][j]->get_shape().getGlobalBounds())) {
+                        //Call the on_collision function
+                        plyr->on_collision(current_level_array[0][j]->get_type());
+                    }
+                }
+            }
+            //TODO: Check for collisions with enemies
+        }
+    }
 
     //Delete all of the levels. Called when the game is ended
     void delete_levels() {

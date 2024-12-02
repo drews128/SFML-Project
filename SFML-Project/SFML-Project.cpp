@@ -88,22 +88,13 @@ int main()
 
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-        //TODO: Main game logic goes here
+        //Main game logic
 
         //Run the update function for every object in the current level
         levels.update_all_objects(delta);
 
-        //Need collision detection. Check here: https://stackoverflow.com/questions/49616112/c-sfml-collision-detection-between-different-classes
-        //https://www.sfml-dev.org/tutorials/2.1/graphics-transform.php#bounding-boxes
-        //Iterate through every player and ground enemy in the level and check if it is colliding with any of the other objects
-        //Needs an on_collision(other_object) function on the game_object class
-
-
-        //TODO: Make a game manager class cause this is starting to get messy!
-
-
         //Check for collisions between all objects
-        
+        levels.detect_collisions();
 
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
