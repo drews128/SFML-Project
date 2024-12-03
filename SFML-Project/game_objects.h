@@ -75,7 +75,7 @@ public:
 		//Apply y velocity (jump)
 		shape.move(0,y_velocity * delta);
 
-		//Reduce y velocity
+		//Reduce y velocity (make the jump go down)
 		if (y_velocity < 0)
 			y_velocity += 98;
 		else
