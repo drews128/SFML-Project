@@ -62,15 +62,25 @@ public:
 class player : public game_object {
 protected:
 	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
-	float move_speed = 250;
+	float move_speed = 350;
+	float jump_force = -2000;
+	float y_velocity = 0;
 public:
 	//Constructor
-	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {
-		//TODO: Player variables need to be set here
-	}
+	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {}
 
 	//Override update function
 	void update(float delta) override {
+
+		//Apply y velocity (jump)
+		shape.move(0,y_velocity * delta);
+
+		//Reduce y velocity
+		if (y_velocity < 0)
+			y_velocity += 98;
+		else
+			y_velocity = 0;
+
 		//Apply gravity only if the current floor count is less than 1 (0)
 		if (get_floor_count() < 1)
 			apply_gravity(delta);
@@ -81,6 +91,8 @@ public:
 			shape.move(-1 * get_move_speed() * delta,0);
 		if (right)
 			shape.move(1 * get_move_speed() * delta, 0);
+		if (get_floor_count() >= 1 && up)
+			y_velocity = jump_force;
 	}
 
 	//Override on collision function
