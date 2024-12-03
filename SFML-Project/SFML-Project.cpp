@@ -71,11 +71,38 @@ int main()
 
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
+        
+        //Player input variables
+        bool is_left_pressed = false;
+        bool is_right_pressed = false;
+        bool is_jump_pressed = false;
 
         //Detect user inputs
         while (window.pollEvent(input_event)) {
 
-            //TODO: Detect user input
+            //Check if the player pressed A or the left arrow key
+            if (input_event.type == Event::KeyPressed && (input_event.key.code == Keyboard::A || input_event.key.code == Keyboard::Left)) {
+                is_left_pressed = true;
+            }
+            else {
+                is_left_pressed = false;
+            }
+
+            //Check if the player pressed D or the Right arrow key
+            if (input_event.type == Event::KeyPressed && (input_event.key.code == Keyboard::D || input_event.key.code == Keyboard::Right)) {
+                is_right_pressed = true;
+            }
+            else {
+                is_right_pressed = false;
+            }
+
+            //Check if the player pressed W, spacebar, or the up arrow key
+            if (input_event.type == Event::KeyPressed && (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up)) {
+                is_jump_pressed = true;
+            }
+            else {
+                is_jump_pressed = false;
+            }
 
             //Close the window if the close window button is pressed or the escape button is pressed
             if (input_event.type == Event::Closed || input_event.type == Event::KeyPressed && input_event.key.code == Keyboard::Escape)
@@ -90,7 +117,7 @@ int main()
         //Main game logic
 
         //Run the update function for every object in the current level
-        levels.update_all_objects(delta);
+        levels.update_all_objects(delta, is_left_pressed, is_right_pressed, is_jump_pressed);
 
         //Check for collisions between all objects
         levels.detect_collisions();

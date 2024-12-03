@@ -61,6 +61,7 @@ public:
 
 class player : public game_object {
 protected:
+	float move_speed = 250;
 	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
 public:
 	//Constructor
@@ -68,12 +69,18 @@ public:
 		//TODO: Player variables need to be set here
 	}
 
-	//TODO: Pass through player input
 	//Override update function
 	void update(float delta) override {
 		//Apply gravity only if the current floor count is less than 1 (0)
 		if (get_floor_count() < 1)
 			apply_gravity(delta);
+	}
+
+	void update_movement(float delta, bool left, bool right, bool up) {
+		if (left)
+			shape.move(-1 * get_move_speed() * delta,0);
+		if (right)
+			shape.move(1 * get_move_speed() * delta, 0);
 	}
 
 	//Override on collision function
@@ -93,8 +100,14 @@ public:
 	int get_floor_count() {
 		return floor_count;
 	}
+	float get_move_speed() {
+		return move_speed;
+	}
 	//Setters
 	void set_floor_count(int new_floor_count) {
 		floor_count = new_floor_count;
+	}
+	void set_move_speed(float new_move_speed) {
+		move_speed = new_move_speed;
 	}
 };

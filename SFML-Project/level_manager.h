@@ -31,8 +31,13 @@ public:
 	level_manager() = default;
 
     //Run update function for all objects in the current level
-    void update_all_objects(Time delta) {
+    void update_all_objects(Time delta, bool left_input, bool right_input, bool up_input) {
         for (int i = 0; i < *current_level_size; i++) {
+            //Check if current object is player
+            if (player* plyr = dynamic_cast<player*>(current_level_array[0][i]))
+                //Call update movement function on player
+                plyr->update_movement(delta.asMicroseconds() / static_cast<float>(1000000), left_input, right_input, up_input);
+
             //Call update function; convert microseconds to seconds
             current_level_array[0][i]->update(delta.asMicroseconds() / static_cast<float>(1000000));
         }
