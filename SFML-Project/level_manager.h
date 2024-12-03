@@ -25,6 +25,7 @@ private:
         new player(320, 50, 50, 50, "Player", Color::Blue),
         new game_object(320, 610, 400, 100, "Platform", Color::Black)
     };
+
 public:
     //Constructor (default)
 	level_manager() = default;

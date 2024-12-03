@@ -72,7 +72,6 @@ int main()
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
 
-
         //Detect user inputs
         while (window.pollEvent(input_event)) {
 

@@ -68,7 +68,7 @@ public:
 		//TODO: Player variables need to be set here
 	}
 
-	//TODO: override update function; pass through player input
+	//TODO: Pass through player input
 	//Override update function
 	void update(float delta) override {
 		apply_gravity(delta);
