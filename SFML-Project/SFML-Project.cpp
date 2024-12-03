@@ -2,7 +2,9 @@
 #include <string>
 using namespace std;
 
+//Our files
 #include "game_objects.h"
+#include "level_manager.h"
 
 //SFML files
 #include "SFML/Graphics.hpp"
@@ -16,7 +18,13 @@ int main()
     //Variables
     string player_name;
     int user_seleciton;
-    int current_level = 0;
+    //Player input variables
+    bool is_left_pressed = false;
+    bool is_right_pressed = false;
+    bool is_jump_pressed = false;
+
+    //Level manager
+    level_manager levels = level_manager();
 
     //Inital message
     cout << "Welcome to [GAME TITLE GOES HERE]!" << endl;
@@ -32,13 +40,16 @@ int main()
 
         //TODO: Save player name to save file
 
-        current_level = 0;
+        levels.set_current_level(1);
 
         break;
     case 2:
         //Continue
 
         //TODO: Add continuing from save file
+
+        //Code for testing only, should be setting it to whatever the saved level id is
+        levels.set_current_level(1);
 
         break;
     default:
@@ -48,15 +59,10 @@ int main()
         break;
     }
 
-    //Level 1 array
-    int level_1_size = 1;
-    game_object** level_1 = new game_object * [level_1_size] {
-        new game_object(50, 50, 50, 50, "Test", Color::Red)
-    };
-
     //Some of the following code is based on the offical SFML documentation (https://www.sfml-dev.org/documentation/2.6.2/)
     //Create window with SFML
     RenderWindow window(VideoMode(1440, 810), "Game Title", Style::Titlebar | Style::Close);
+    window.setFramerateLimit(60); //Set the framerate limit to 60fps
     //SFML input detection
     Event input_event;
     //Clock that records the time between each frame
@@ -67,11 +73,40 @@ int main()
 
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
-        
+
         //Detect user inputs
         while (window.pollEvent(input_event)) {
 
-            //TODO: Detect user input
+            //Check if inputs pressed down
+            if (input_event.type == Event::KeyPressed) {
+                //Left
+                if (input_event.key.code == Keyboard::A || input_event.key.code == Keyboard::Left) {
+                    is_left_pressed = true;
+                }
+                //Right
+                if (input_event.key.code == Keyboard::D || input_event.key.code == Keyboard::Right) {
+                    is_right_pressed = true;
+                }
+                //Jump
+                if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
+                    is_jump_pressed = true;
+                }
+            }
+            //Check if inputs are released 
+            else if (input_event.type == Event::KeyReleased) {
+                //Left
+                if (input_event.key.code == Keyboard::A || input_event.key.code == Keyboard::Left) {
+                    is_left_pressed = false;
+                }
+                //Right
+                if (input_event.key.code == Keyboard::D || input_event.key.code == Keyboard::Right) {
+                    is_right_pressed = false;
+                }
+                //Jump
+                if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
+                    is_jump_pressed = false;
+                }
+            }
 
             //Close the window if the close window button is pressed or the escape button is pressed
             if (input_event.type == Event::Closed || input_event.type == Event::KeyPressed && input_event.key.code == Keyboard::Escape)
@@ -79,20 +114,29 @@ int main()
                 window.close();
         }
 
-        //TODO: Main game logic goes here
 
-        for (int i = 0; i < level_1_size; i++) {
-            level_1[i]->update(delta.asMicroseconds());
-        }
+
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+        //Main game logic
+
+        //Run the update function for every object in the current level
+        levels.update_all_objects(delta, is_left_pressed, is_right_pressed, is_jump_pressed);
+
+        //Check for collisions between all objects
+        levels.detect_collisions();
+
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
 
         //Render
         //Clear the previous frame and color the background with light blue
         window.clear(Color(147, 248, 250));
 
-        //TODO: Main game rendering (drawing all of the objects) goes here
-
-        for (int i = 0; i < level_1_size; i++) {
-            window.draw(level_1[i]->get_shape());
+        //Draw every object in the level
+        for (int i = 0; i < levels.get_current_level_size(); i++) {
+            window.draw(levels.get_current_level_array()[0][i]->get_shape());
         }
 
         //Display the new frame
@@ -102,11 +146,8 @@ int main()
         delta = delta_clock.restart();
     }
 
-    //Delete level arrays
-    for (int i = 0; i < level_1_size; i++) {
-        delete level_1[i];
-    }
-    delete[] level_1;
+    //Delete the level arrays
+    levels.delete_levels();
 
     return 1;
 }

@@ -25,14 +25,21 @@ public:
 		set_color(color);
 	}
 
-	//Called every frame
-	virtual void update(int delta) {
-		
-	}
+	//Called every frame (delta is the time between frame in seconds)
+	virtual void update(float delta) {}
+
+	//Called every time a collision is detected by the level manager
+	virtual void on_collision(string type_of_other_object) {}
 
 	//Resets the position of the object
 	void reset_position() {
 		shape.setPosition(inital_position);
+	}
+
+	//Applys gravity to an object. Should only be called if an object should have gravity applied to it
+	virtual void apply_gravity(float delta) {
+		float fall_speed = 50;
+		shape.move(0, 9.8 * fall_speed * delta);
 	}
 
 	//Getters
@@ -50,4 +57,69 @@ public:
 	void set_size(float width, float height) { shape.setSize(Vector2f(width, height)); };
 	void set_type(string type) { this->type = type; };
 	void set_color(Color color) { shape.setFillColor(color); };
+};
+
+class player : public game_object {
+protected:
+	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
+	float move_speed = 350;
+	float jump_force = -2000;
+	float y_velocity = 0;
+public:
+	//Constructor
+	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {}
+
+	//Override update function
+	void update(float delta) override {
+
+		//Apply y velocity (jump)
+		shape.move(0,y_velocity * delta);
+
+		//Reduce y velocity (make the jump go down)
+		if (y_velocity < 0)
+			y_velocity += 98;
+		else
+			y_velocity = 0;
+
+		//Apply gravity only if the current floor count is less than 1 (0)
+		if (get_floor_count() < 1)
+			apply_gravity(delta);
+	}
+
+	void update_movement(float delta, bool left, bool right, bool up) {
+		if (left)
+			shape.move(-1 * get_move_speed() * delta,0);
+		if (right)
+			shape.move(1 * get_move_speed() * delta, 0);
+		if (get_floor_count() >= 1 && up)
+			y_velocity = jump_force;
+	}
+
+	//Override on collision function
+	void on_collision(string type_of_other_object) override{
+		if (type_of_other_object == "Platform") {
+			//Increase the floor count by one
+			set_floor_count(get_floor_count() + 1);
+		}
+	}
+
+	//Sets the floor count to 0. Called at the beginning of the player's detect_collisions loop in the level manager
+	void reset_floor_count() {
+		set_floor_count(0);
+	}
+
+	//Getters
+	int get_floor_count() {
+		return floor_count;
+	}
+	float get_move_speed() {
+		return move_speed;
+	}
+	//Setters
+	void set_floor_count(int new_floor_count) {
+		floor_count = new_floor_count;
+	}
+	void set_move_speed(float new_move_speed) {
+		move_speed = new_move_speed;
+	}
 };
