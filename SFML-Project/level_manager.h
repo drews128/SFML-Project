@@ -44,6 +44,7 @@ public:
             //Check for collisions with player
             if (player* plyr = dynamic_cast<player*>(current_level_array[0][i])) {
                 //(This loop assumes the player is always the first element of a level)
+                plyr->reset_floor_count();
                 for (int j = 1; j < *current_level_size; j++) {
                     if (plyr->get_shape().getGlobalBounds().intersects(current_level_array[0][j]->get_shape().getGlobalBounds())) {
                         //Call the on_collision function

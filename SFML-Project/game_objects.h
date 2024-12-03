@@ -61,7 +61,7 @@ public:
 
 class player : public game_object {
 protected:
-	//TODO: Player variables go here
+	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
 public:
 	//Constructor
 	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {
@@ -71,11 +71,30 @@ public:
 	//TODO: Pass through player input
 	//Override update function
 	void update(float delta) override {
-		apply_gravity(delta);
+		//Apply gravity only if the current floor count is less than 1 (0)
+		if (get_floor_count() < 1)
+			apply_gravity(delta);
 	}
 
 	//Override on collision function
 	void on_collision(string type_of_other_object) override{
-		cout << "Player is colliding with " << type_of_other_object << endl;
+		if (type_of_other_object == "Platform") {
+			//Increase the floor count by one
+			set_floor_count(get_floor_count() + 1);
+		}
+	}
+
+	//Sets the floor count to 0. Called at the beginning of the player's detect_collisions loop in the level manager
+	void reset_floor_count() {
+		set_floor_count(0);
+	}
+
+	//Getters
+	int get_floor_count() {
+		return floor_count;
+	}
+	//Setters
+	void set_floor_count(int new_floor_count) {
+		floor_count = new_floor_count;
 	}
 };
