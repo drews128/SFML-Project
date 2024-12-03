@@ -18,8 +18,10 @@ int main()
     //Variables
     string player_name;
     int user_seleciton;
-    int* current_level_size;
-    game_object*** current_level_array;
+    //Player input variables
+    bool is_left_pressed = false;
+    bool is_right_pressed = false;
+    bool is_jump_pressed = false;
 
     //Level manager
     level_manager levels = level_manager();
@@ -71,37 +73,39 @@ int main()
 
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
-        
-        //Player input variables
-        bool is_left_pressed = false;
-        bool is_right_pressed = false;
-        bool is_jump_pressed = false;
 
         //Detect user inputs
         while (window.pollEvent(input_event)) {
 
-            //Check if the player pressed A or the left arrow key
-            if (input_event.type == Event::KeyPressed && (input_event.key.code == Keyboard::A || input_event.key.code == Keyboard::Left)) {
-                is_left_pressed = true;
+            //Check if inputs pressed down
+            if (input_event.type == Event::KeyPressed) {
+                //Left
+                if (input_event.key.code == Keyboard::A || input_event.key.code == Keyboard::Left) {
+                    is_left_pressed = true;
+                }
+                //Right
+                if (input_event.key.code == Keyboard::D || input_event.key.code == Keyboard::Right) {
+                    is_right_pressed = true;
+                }
+                //Jump
+                if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
+                    is_jump_pressed = true;
+                }
             }
-            else {
-                is_left_pressed = false;
-            }
-
-            //Check if the player pressed D or the Right arrow key
-            if (input_event.type == Event::KeyPressed && (input_event.key.code == Keyboard::D || input_event.key.code == Keyboard::Right)) {
-                is_right_pressed = true;
-            }
-            else {
-                is_right_pressed = false;
-            }
-
-            //Check if the player pressed W, spacebar, or the up arrow key
-            if (input_event.type == Event::KeyPressed && (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up)) {
-                is_jump_pressed = true;
-            }
-            else {
-                is_jump_pressed = false;
+            //Check if inputs are released 
+            else if (input_event.type == Event::KeyReleased) {
+                //Left
+                if (input_event.key.code == Keyboard::A || input_event.key.code == Keyboard::Left) {
+                    is_left_pressed = false;
+                }
+                //Right
+                if (input_event.key.code == Keyboard::D || input_event.key.code == Keyboard::Right) {
+                    is_right_pressed = false;
+                }
+                //Jump
+                if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
+                    is_jump_pressed = false;
+                }
             }
 
             //Close the window if the close window button is pressed or the escape button is pressed

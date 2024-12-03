@@ -61,8 +61,8 @@ public:
 
 class player : public game_object {
 protected:
-	float move_speed = 250;
 	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
+	float move_speed = 250;
 public:
 	//Constructor
 	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {
