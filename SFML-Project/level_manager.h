@@ -19,12 +19,11 @@ private:
     game_object*** current_level_array = nullptr;
 
     //Level 1 array
-    int level_1_size = 3;
+    int level_1_size = 2;
     //IMPORTANT: Player should always be the first element in a level!
     game_object** level_1 = new game_object * [level_1_size] {
         new player(320, 50, 50, 50, "Player", Color::Blue),
-        new game_object(320, 610, 400, 100, "Platform", Color::Black),
-        new game_object(500, 200, 300, 100, "Platform", Color::Black)
+        new game_object(320, 610, 400, 100, "Platform", Color::Black)
     };
 
 public:
