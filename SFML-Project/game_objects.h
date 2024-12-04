@@ -29,7 +29,7 @@ public:
 	virtual void update(float delta) {}
 
 	//Called every time a collision is detected by the level manager
-	virtual void on_collision(string type_of_other_object, Vector2f other_position) {}
+	virtual void on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {}
 
 	//Resets the position of the object
 	void reset_position() {
@@ -99,11 +99,14 @@ public:
 	}
 
 	//Override on collision function
-	void on_collision(string type_of_other_object, Vector2f other_position) override{
+	void on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override{
 		if (type_of_other_object == "Platform") {
 
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_left_wall_count(get_left_wall_count() + 1);
+			}
+			else if (get_x_position() + get_width() > other_position.x + other_size.x && get_y_position() > other_position.y - (get_height() - 10)) {
+				set_right_wall_count(get_right_wall_count() + 1);
 			}
 			
 			//Increase the floor count by one

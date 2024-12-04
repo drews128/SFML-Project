@@ -23,7 +23,7 @@ private:
     vector<game_object*> level_1 = {
         new player(320, 50, 50, 50, "Player", Color::Blue),
         new game_object(320, 610, 400, 100, "Platform", Color::Black),
-        new game_object(500, 500, 400, 100, "Platform", Color::Black)
+        new game_object(500, 400, 400, 100, "Platform", Color::Black)
     };
     int level_1_size = (int)level_1.size();
 
@@ -61,7 +61,7 @@ public:
                 for (size_t j = 0; j < current_level->size(); j++) {
                     if (i != j && plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                         //Call the on_collision function
-                        plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition());
+                        plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(),(*current_level)[j]->get_shape().getSize());
                     }
                 }
             }
