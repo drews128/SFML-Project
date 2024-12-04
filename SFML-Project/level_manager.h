@@ -29,7 +29,7 @@ private:
 
 public:
     //Constructor (default)
-	level_manager() = default;
+    level_manager() = default;
 
     //Run update function for all objects in the current level
     void update_all_objects(Time delta, bool left_input, bool right_input, bool up_input) {
@@ -62,12 +62,13 @@ public:
                         if (plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
                             plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
+                            //hmmm
                         }
                     }
                 }
             }
             //TODO: Check for collisions with enemies
-          
+
         }
     }
 
@@ -79,13 +80,13 @@ public:
         }
         level_1.clear();
     }
-    
+
     //Getters & Setters (Does not include level arrays and sizes, those should never be changed at runtime.)
     //Getters
     int get_current_level_size() {
         return (int)level_1.size();
     }
-    
+
     int get_current_level_size() const {
         return current_level ? (int)current_level->size() : 0;
     }
