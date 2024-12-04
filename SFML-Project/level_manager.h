@@ -62,7 +62,6 @@ public:
                         if (plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
                             plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
-                            //hmmm
                         }
                     }
                 }

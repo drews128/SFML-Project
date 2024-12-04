@@ -108,11 +108,10 @@ public:
 			else if (get_x_position() + get_width() > other_position.x + other_size.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_right_wall_count(get_right_wall_count() + 1);
 			}
-			else if (get_y_position() + get_height() > other_position.y) {
+			else if (get_y_position() + get_height() < other_position.y + 10) {
 				set_floor_count(get_floor_count() + 1);
 			}
 			else if (get_y_position() > other_position.y) {
-				//This won't work for some reason.
 				y_velocity = 0;
 			}
 		}
