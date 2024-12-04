@@ -1,11 +1,11 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
 #include "game_objects.h"
 
-#include <vector>
 //SFML files
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
@@ -18,17 +18,13 @@ private:
     //Current level pointer
     vector<game_object*>* current_level = nullptr;
 
-    //Level 1 array
-    
-    //IMPORTANT: Player should always be the first element in a level!
-    
+    //Level 1 vector
+    //IMPORTANT: Player should always be the first element in a level
     vector<game_object*> level_1 = {
         new player(320, 50, 50, 50, "Player", Color::Blue),
         new game_object(320, 610, 400, 100, "Platform", Color::Black)
     };
     int level_1_size = level_1.size();
-
-  
 
 public:
     //Constructor (default)
@@ -69,6 +65,7 @@ public:
                 }
             }
             //TODO: Check for collisions with enemies
+          
         }
     }
 
@@ -94,7 +91,6 @@ public:
     vector<game_object*>* get_current_level() const {
         return current_level;
     }
-
     //Setters
     void set_current_level(int level_id) {
         switch (level_id) {

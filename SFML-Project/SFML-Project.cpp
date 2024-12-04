@@ -32,7 +32,7 @@ int main()
     cout << "1. Start New Game" << endl << "2. Continue From Existing Save File" << endl;
     //Get user selection
     cin >> user_seleciton;
-    switch (user_seleciton) {
+    switch(user_seleciton){
     case 1:
         //New game
         cout << endl << "Enter Your Name:" << endl;

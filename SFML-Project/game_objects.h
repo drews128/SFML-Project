@@ -59,8 +59,6 @@ public:
 	void set_color(Color color) { shape.setFillColor(color); };
 };
 
-
-
 class player : public game_object {
 protected:
 	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
@@ -133,4 +131,3 @@ class enemy : public game_object {
 class drone : public enemy {
 
 };
-
