@@ -65,9 +65,9 @@ protected:
 	int left_wall_count = 0;
 	int right_wall_count = 0;
 	int ceiling_count = 0;
-	float move_speed = 350;
-	float jump_force = -2000;
-	float y_velocity = 0;
+	float move_speed = 350; //Movement speed
+	float jump_force = -2000; //Jump force
+	float y_velocity = 0; //Y velocity
 public:
 	//Constructor
 	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {}
@@ -84,36 +84,51 @@ public:
 		else
 			y_velocity = 0;
 
-		//Apply gravity only if the current floor count is less than 1 (0)
+		//Apply gravity only if the player isn't touching the ground
 		if (get_floor_count() < 1)
 			apply_gravity(delta);
 	}
 
+	//Update player's movement
 	void update_movement(float delta, bool left, bool right, bool up) {
+		//Left pressed and not colliding with a wall
 		if (left && get_right_wall_count() < 1)
+			//Move player
 			shape.move(-1 * get_move_speed() * delta,0);
+		//Right pressed and not colliding with a wall
 		if (right && get_left_wall_count() < 1)
+			//Move player
 			shape.move(1 * get_move_speed() * delta, 0);
+		//Jump pressed and on a floor
 		if (get_floor_count() >= 1 && up)
+			//Set y velocity to the jump_force
 			y_velocity = jump_force;
 	}
 
 	//Override on collision function
 	void on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override{
+		//Check if other object is a platform
 		if (type_of_other_object == "Platform") {
-
+			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_left_wall_count(get_left_wall_count() + 1);
 			}
+			//Colliding with a wall on the right side of the platform
 			else if (get_x_position() + get_width() > other_position.x + other_size.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_right_wall_count(get_right_wall_count() + 1);
 			}
+			//Colliding with the floor of a platform
 			else if (get_y_position() + get_height() < other_position.y + 10) {
 				set_floor_count(get_floor_count() + 1);
 			}
+			//Colliding with the ceiling of a platform
 			else if (get_y_position() > other_position.y) {
 				y_velocity = 0;
 			}
+		}
+		//Check if other object is an enemy
+		if (type_of_other_object == "Enemy") {
+			//TODO: Enemy collision logic
 		}
 	}
 

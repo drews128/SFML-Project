@@ -23,7 +23,7 @@ private:
     vector<game_object*> level_1 = {
         new player(320, 50, 50, 50, "Player", Color::Blue),
         new game_object(320, 610, 400, 100, "Platform", Color::Black),
-        new game_object(500, 400, 400, 100, "Platform", Color::Black)
+        new game_object(500, 400, 400, 100, "Platform", Color::Black),
     };
     int level_1_size = (int)level_1.size();
 
@@ -51,23 +51,37 @@ public:
         if (!current_level) return; // No level set
 
         for (size_t i = 0; i < current_level->size(); i++) {
-            //Check for collisions with player
+            //Check if our current selection is the player
             if (player* plyr = dynamic_cast<player*>((*current_level)[i])) {
                 // Reset floor count
                 plyr->reset_collision_counts();
 
-                // Check collisions with other objects
+                // Check collisions with every other object
                 for (size_t j = 0; j < current_level->size(); j++) {
+                    //Make sure we aren't currently trying to check the player with itself
                     if (i != j) {
+                        //Check if the object's shape is intersecting the player's shape
                         if (plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
                             plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
                         }
                     }
                 }
+
+                //Check if the player is currently out of bounds
+                if (plyr->get_y_position() > 1000) {
+                    reset_level();
+                }
             }
             //TODO: Check for collisions with enemies
 
+        }
+    }
+
+    //Reset the positions of all objects in the level
+    void reset_level() {
+        for (size_t i = 0; i < current_level->size(); i++) {
+            (*current_level)[i]->reset_position();
         }
     }
 
@@ -80,16 +94,14 @@ public:
         level_1.clear();
     }
 
-    //Getters & Setters (Does not include level arrays and sizes, those should never be changed at runtime.)
+    //Getters & Setters
     //Getters
     int get_current_level_size() {
         return (int)level_1.size();
     }
-
     int get_current_level_size() const {
         return current_level ? (int)current_level->size() : 0;
     }
-
     vector<game_object*>* get_current_level() const {
         return current_level;
     }
