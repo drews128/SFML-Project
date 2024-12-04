@@ -123,3 +123,11 @@ public:
 		move_speed = new_move_speed;
 	}
 };
+
+class enemy : public game_object {
+
+};
+
+class drone : public enemy {
+
+};

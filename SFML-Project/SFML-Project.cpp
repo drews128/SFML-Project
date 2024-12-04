@@ -135,8 +135,8 @@ int main()
         window.clear(Color(147, 248, 250));
 
         //Draw every object in the level
-        for (int i = 0; i < levels.get_current_level_size(); i++) {
-            window.draw(levels.get_current_level_array()[0][i]->get_shape());
+        for (auto obj : *levels.get_current_level()) {
+            window.draw(obj->get_shape());
         }
 
         //Display the new frame
