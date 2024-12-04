@@ -111,8 +111,8 @@ public:
 			else if (get_y_position() + get_height() > other_position.y) {
 				set_floor_count(get_floor_count() + 1);
 			}
-			else {
-				cout << "test" << endl;
+			else if (get_y_position() > other_position.y) {
+				//This won't work for some reason.
 				y_velocity = 0;
 			}
 		}
