@@ -22,9 +22,10 @@ private:
     //IMPORTANT: Player should always be the first element in a level
     vector<game_object*> level_1 = {
         new player(320, 50, 50, 50, "Player", Color::Blue),
-        new game_object(320, 610, 400, 100, "Platform", Color::Black)
+        new game_object(320, 610, 400, 100, "Platform", Color::Black),
+        new game_object(500, 500, 400, 100, "Platform", Color::Black)
     };
-    int level_1_size = level_1.size();
+    int level_1_size = (int)level_1.size();
 
 public:
     //Constructor (default)
@@ -54,13 +55,13 @@ public:
             if (player* plyr = dynamic_cast<player*>((*current_level)[i])) {
                 // Reset floor count
                 //(This loop assumes the player is always the first element of a level)
-                plyr->reset_floor_count();
+                plyr->reset_collision_counts();
 
                 // Check collisions with other objects
                 for (size_t j = 0; j < current_level->size(); j++) {
                     if (i != j && plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                         //Call the on_collision function
-                        plyr->on_collision((*current_level)[j]->get_type());
+                        plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition());
                     }
                 }
             }
@@ -81,11 +82,11 @@ public:
     //Getters & Setters (Does not include level arrays and sizes, those should never be changed at runtime.)
     //Getters
     int get_current_level_size() {
-        return level_1.size();
+        return (int)level_1.size();
     }
     
     int get_current_level_size() const {
-        return current_level ? current_level->size() : 0;
+        return current_level ? (int)current_level->size() : 0;
     }
 
     vector<game_object*>* get_current_level() const {
