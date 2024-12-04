@@ -54,14 +54,15 @@ public:
             //Check for collisions with player
             if (player* plyr = dynamic_cast<player*>((*current_level)[i])) {
                 // Reset floor count
-                //(This loop assumes the player is always the first element of a level)
                 plyr->reset_collision_counts();
 
                 // Check collisions with other objects
                 for (size_t j = 0; j < current_level->size(); j++) {
-                    if (i != j && plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
-                        //Call the on_collision function
-                        plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(),(*current_level)[j]->get_shape().getSize());
+                    if (i != j) {
+                        if (plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
+                            //Call the on_collision function
+                            plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
+                        }
                     }
                 }
             }
