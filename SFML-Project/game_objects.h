@@ -110,7 +110,7 @@ public:
 			}
 			
 			//Increase the floor count by one
-			set_floor_count(get_floor_count() + 1);
+			//set_floor_count(get_floor_count() + 1);
 		}
 	}
 
