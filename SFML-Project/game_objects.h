@@ -65,8 +65,8 @@ protected:
 	int left_wall_count = 0;
 	int right_wall_count = 0;
 	int ceiling_count = 0;
-	float move_speed = 350; //Movement speed
-	float jump_force = -2000; //Jump force
+	float move_speed = 300; //Movement speed
+	float jump_force = -1950; //Jump force
 	float y_velocity = 0; //Y velocity
 public:
 	//Constructor
@@ -180,4 +180,18 @@ class enemy : public game_object {
 
 class drone : public enemy {
 
+};
+
+class end_goal : public game_object {
+protected:
+	int level_to_load = 1;
+public:
+	end_goal(float x_position, float y_position, float width, float height, string type, Color color, int level) : game_object(x_position,y_position,width,height,type,color) {
+		set_level_to_load(level);
+	}
+
+	//Getter(s)
+	int get_level_to_load() {return level_to_load;}
+	//Setter(s)
+	void set_level_to_load(int new_level) { level_to_load = new_level; }
 };
