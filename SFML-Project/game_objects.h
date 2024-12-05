@@ -65,8 +65,8 @@ protected:
 	int left_wall_count = 0;
 	int right_wall_count = 0;
 	int ceiling_count = 0;
-	float move_speed = 350; //Movement speed
-	float jump_force = -2000; //Jump force
+	float move_speed = 300; //Movement speed
+	float jump_force = -1950; //Jump force
 	float y_velocity = 0; //Y velocity
 public:
 	//Constructor
