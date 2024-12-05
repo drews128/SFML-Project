@@ -22,10 +22,16 @@ private:
     //IMPORTANT: Player should always be the first element in a level
     vector<game_object*> level_1 = {
         new player(320, 50, 50, 50, "Player", Color::Blue),
+        new end_goal(600, 300, 50, 50, "End Goal", Color::Green, 2),
         new game_object(320, 610, 400, 100, "Platform", Color::Black),
         new game_object(500, 400, 400, 100, "Platform", Color::Black),
     };
-    int level_1_size = (int)level_1.size();
+    //Level 2 vector
+    vector<game_object*> level_2 = {
+        new player(320, 50, 50, 50, "Player", Color::Blue),
+        new game_object(320, 610, 400, 100, "Platform", Color::Black),
+        new game_object(500, 610, 400, 100, "Platform", Color::Black),
+    };
 
 public:
     //Constructor (default)
@@ -64,6 +70,10 @@ public:
                         if (plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
                             plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
+
+                            //Check if object is the end goal
+                            if (end_goal* goal = dynamic_cast<end_goal*>((*current_level)[j]))
+                                set_current_level(goal->get_level_to_load());
                         }
                     }
                 }
@@ -73,6 +83,8 @@ public:
                     reset_level();
                 }
             }
+
+
             //TODO: Check for collisions with enemies
 
         }
@@ -110,6 +122,9 @@ public:
         switch (level_id) {
         case 1:
             current_level = &level_1;
+            break;
+        case 2:
+            current_level = &level_2;
             break;
         default:
             cout << "Invalid Level ID: " << level_id << endl;
