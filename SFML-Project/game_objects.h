@@ -26,6 +26,8 @@ public:
 	}
 	//Default constructor
 	game_object() = default;
+	//Destructor
+	~game_object(){};
 
 	//Called every frame (delta is the time between frame in seconds)
 	virtual void update(float delta) {}
@@ -73,6 +75,8 @@ protected:
 public:
 	//Constructor
 	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {}
+	//Destructor
+	~player() {};
 
 	//Override update function
 	void update(float delta) override {
@@ -179,26 +183,37 @@ public:
 //Base enemy class
 class enemy : virtual public game_object {
 protected:
-
+	float move_speed = 300; //Movement speed
 public:
 	//Enemy constructor
-	enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {};
+	enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {}
 	//Default constructor
 	enemy() = default;
+	//Destructor
+	~enemy() {};
+
 };
 
-class walking_enemy : virtual public enemy {
+//Ground enemy class; walks across the ground
+class ground_enemy : virtual public enemy {
 protected:
 
 public:
-	walking_enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {};
+	//Ground enemy constructor
+	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {}
+	//Destructor
+	~ground_enemy() {};
 };
 
+//Flying enemy class; flies in the sky
 class flying_enemy : virtual public enemy {
 protected:
 
 public:
-
+	//Flying enemy constructor
+	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {};
+	//Destructor
+	~flying_enemy() {};
 };
 
 class end_goal : public game_object {
