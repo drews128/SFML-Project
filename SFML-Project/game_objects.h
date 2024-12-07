@@ -175,12 +175,42 @@ public:
 };
 
 class enemy : public game_object {
+protected:
+	//health is the amount of times the player has to jump on them
+	int health;
+	//the speed is how fast the enemy is, but if we don't want to try to make enemies move we can just set this to 0 or delete it
+	int speed;
+
+	void set_speed(int speed) {
+		this->speed = speed;
+	}
+	void set_Health(int health) {
+		this->health = health;
+	}
+
+public:
+
+	void change_Directions() {
+		this->speed * -1;
+	}
+
+	int get_Speed() {
+		return speed;
+	}
+	int get_Health() {
+		return health;
+	}
+
+	enemy(int health, int speed, float x_position, float y_position, float width, float height, string type, Color color): game_object(x_position, y_position, width, height, type, color) {
+		set_Health(health);
+		set_speed(speed);
+	}
+
+
 
 };
 
-class drone : public enemy {
 
-};
 
 class end_goal : public game_object {
 protected:
