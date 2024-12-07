@@ -24,6 +24,8 @@ public:
 		set_type(type);
 		set_color(color);
 	}
+	//Default constructor
+	game_object() = default;
 
 	//Called every frame (delta is the time between frame in seconds)
 	virtual void update(float delta) {}
@@ -174,11 +176,28 @@ public:
 	}
 };
 
-class enemy : public game_object {
+//Base enemy class
+class enemy : virtual public game_object {
+protected:
 
+public:
+	//Enemy constructor
+	enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {};
+	//Default constructor
+	enemy() = default;
 };
 
-class drone : public enemy {
+class walking_enemy : virtual public enemy {
+protected:
+
+public:
+	walking_enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {};
+};
+
+class flying_enemy : virtual public enemy {
+protected:
+
+public:
 
 };
 
