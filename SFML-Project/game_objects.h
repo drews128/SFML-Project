@@ -191,7 +191,6 @@ public:
 	enemy() = default;
 	//Destructor
 	~enemy() {};
-
 };
 
 //Ground enemy class; walks across the ground

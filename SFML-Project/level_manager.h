@@ -101,11 +101,8 @@ public:
 
     //Delete all of the levels. Called when the game is ended
     void delete_levels() {
-        // Delete objects in level_1
-        for (auto obj : level_1) {
-            delete obj;
-        }
         level_1.clear();
+        level_2.clear();
     }
 
     //Getters & Setters
