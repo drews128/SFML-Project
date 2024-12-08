@@ -178,7 +178,7 @@ public:
 
 class ground_enemy: public  game_object {
 private:
-	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
+	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
 	int left_wall_count = 0;
 	int right_wall_count = 0;
 
@@ -188,17 +188,15 @@ private:
 	void set_move_speed(float move_speed) {
 		this->move_speed = move_speed;
 	}
-	void set_speed(int speed) {
-		this->move_speed = speed;
-	}
+	
 
 
 public:
 
 	void on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {
 
-		//Check if other object is an enemy
-		if (type_of_other_object == "Enemy") {
+		//Check if other object is an platform
+		if (type_of_other_object == "Platform") {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_left_wall_count(get_left_wall_count() + 1);
@@ -272,7 +270,7 @@ public:
 
 	//Ground enemy constructor
 	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed) : game_object(x_position, y_position, width, height, type, color) {
-		set_speed(move_speed);
+		set_move_speed(move_speed);
 	}
 	//Destructor
 	~ground_enemy() {};

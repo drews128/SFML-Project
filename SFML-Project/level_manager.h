@@ -26,7 +26,7 @@ private:
         new game_object(0, 750, 250, 50, "Platform", Color::Black),
         new game_object(400, 650, 400, 150, "Platform", Color::Black),
         new game_object(1000, 650, 400, 150, "Platform", Color::Black),
-        new ground_enemy(500, 400, 50, 50, "Enemy", Color::Red),
+        new ground_enemy(500, 400, 50, 50, "Enemy", Color::Red, 50),
     };
     //Level 2 vector
     vector<game_object*> level_2 = {
@@ -46,14 +46,17 @@ public:
         for (auto obj : *current_level) {
             if (player* plyr = dynamic_cast<player*>(obj) ) {
                 // Update player movement
-                plyr->update_movement(delta.asMicroseconds() / 1000000.0, left_input, right_input, up_input);
+                plyr->update_movement(delta.asMicroseconds() / 1'000'000.0f, left_input, right_input, up_input);
                 
             }
             else if (ground_enemy* enmy = dynamic_cast<ground_enemy*>(obj)) {
-                enmy->update_movement(delta.asMicroseconds() / 1000000.0);
+                enmy->update_movement(delta.asMicroseconds() / 1'000'000.0f);
+                
             }
-            // Update the object
+            
             obj->update(delta.asMicroseconds() / 1'000'000.0f);
+            
+            
         }
     }
 
@@ -69,11 +72,13 @@ public:
 
                 // Check collisions with every other object
                 for (size_t j = 0; j < current_level->size(); j++) {
+                    
                     //Make sure we aren't currently trying to check the player with itself
                     if (i != j) {
                         //Check if the object's shape is intersecting the player's shape
                         if (plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
+                            
                             plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
 
                             //Check if object is the end goal
@@ -92,14 +97,14 @@ public:
                 enmy->reset_collision_counts();
 
                 for (size_t j = 0; j < current_level->size(); j++) {
-                    //Make sure we aren't currently trying to check the player with itself
+                    //Make sure we aren't currently trying to check the enemy with itself
                     if (i != j) {
-                        //Check if the object's shape is intersecting the player's shape
+                        //Check if the object's shape is intersecting the enemies shape
                         if (enmy->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
                             enmy->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
-
-                            if (enmy->get_right_wall_count() || enmy->get_left_wall_count()) {
+                            
+                            if (enmy->get_right_wall_count() > 1 || enmy->get_left_wall_count() > 1) {
                                 enmy->change_direction();
                             }
                             
@@ -114,7 +119,7 @@ public:
             }
 
 
-            //TODO: Check for collisions with enemies
+            
 
         }
     }
