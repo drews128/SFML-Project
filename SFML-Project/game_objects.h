@@ -175,42 +175,28 @@ public:
 	}
 };
 
-class enemy : public game_object {
-protected:
 
-	
-	//the speed is how fast the enemy is, but if we don't want to try to make enemies move we can just set this to 0 or delete it
-	int speed;
-
-
+class ground_enemy: public  game_object {
+private:
 	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
 	int left_wall_count = 0;
 	int right_wall_count = 0;
 
 	float y_velocity = 0; //Y velocity
-
 	float move_speed = 50; //Movement speed
-	
+
 	void set_move_speed(float move_speed) {
 		this->move_speed = move_speed;
 	}
 	void set_speed(int speed) {
-		this->speed = speed;
+		this->move_speed = speed;
 	}
+
+
 public:
 
-
-	void change_Directions() {
-		this->speed = speed * -1;
-	}
-
-	int get_Speed() {
-		return speed;
-	}
-	
-
 	void on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {
-		
+
 		//Check if other object is an enemy
 		if (type_of_other_object == "Enemy") {
 			//Colliding with a wall on the left side of the platform
@@ -252,40 +238,16 @@ public:
 	void set_right_wall_count(int new_num) {
 		right_wall_count = new_num;
 	}
+	
 	float get_move_speed() {
 		return move_speed;
 	}
-	
+
 	void change_direction() {
-		if (get_move_speed() > 0) {
-			set_move_speed(get_move_speed() * -1);
-		}
+		set_move_speed(get_move_speed() * -1);
+		
 	}
 
-	//Enemy constructor
-	enemy(int speed, float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {
-		set_speed(speed);
-	}
-	//Default constructor
-	enemy() = default;
-	//Destructor
-	~enemy() {};
-};
-
-
-	
-
-
-
-	
-	
-
-	
-
-
-class ground_enemy: public enemy {
-
-public:
 
 	void update_movement(float delta) {
 		shape.move(get_move_speed() * delta, 0);
@@ -309,14 +271,16 @@ public:
 	}
 
 	//Ground enemy constructor
-	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {}
+	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed) : game_object(x_position, y_position, width, height, type, color) {
+		set_speed(move_speed);
+	}
 	//Destructor
 	~ground_enemy() {};
 	
 };
 	
 
-class flying_enemy: public enemy{
+class flying_enemy: public game_object{
 
 
 public:
