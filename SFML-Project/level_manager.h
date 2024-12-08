@@ -26,12 +26,13 @@ private:
         new game_object(0, 750, 250, 50, "Platform", Color::Black),
         new game_object(400, 650, 400, 150, "Platform", Color::Black),
         new game_object(1000, 650, 400, 150, "Platform", Color::Black),
+        new ground_enemy(500, 400, 50, 50, "Enemy", Color::Red),
     };
     //Level 2 vector
     vector<game_object*> level_2 = {
         new player(320, 50, 50, 50, "Player", Color::Blue),
         new game_object(320, 610, 400, 100, "Platform", Color::Black),
-        new game_object(500, 610, 400, 100, "Platform", Color::Black),
+        new game_object(500, 610, 400, 100, "Platform", Color::Black)
     };
 
 public:
@@ -43,11 +44,14 @@ public:
         if (!current_level) return; // No level set
 
         for (auto obj : *current_level) {
-            if (player* plyr = dynamic_cast<player*>(obj)) {
+            if (player* plyr = dynamic_cast<player*>(obj) ) {
                 // Update player movement
                 plyr->update_movement(delta.asMicroseconds() / 1000000.0, left_input, right_input, up_input);
+                
             }
-
+            else if (ground_enemy* enmy = dynamic_cast<ground_enemy*>(obj)) {
+                enmy->update_movement(delta.asMicroseconds() / 1000000.0);
+            }
             // Update the object
             obj->update(delta.asMicroseconds() / 1'000'000.0f);
         }
@@ -82,6 +86,30 @@ public:
                 //Check if the player is currently out of bounds
                 if (plyr->get_y_position() > 1000) {
                     reset_level();
+                }
+            }
+            else if (ground_enemy * enmy = dynamic_cast<ground_enemy*>((*current_level)[i])) {
+                enmy->reset_collision_counts();
+
+                for (size_t j = 0; j < current_level->size(); j++) {
+                    //Make sure we aren't currently trying to check the player with itself
+                    if (i != j) {
+                        //Check if the object's shape is intersecting the player's shape
+                        if (enmy->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
+                            //Call the on_collision function
+                            enmy->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
+
+                            if (enmy->get_right_wall_count() || enmy->get_left_wall_count()) {
+                                enmy->change_direction();
+                            }
+                            
+                        }
+                    }
+                }
+
+                //Check if the enemy is out of bounds and remove them from the vector
+                if (enmy->get_y_position() > 1000) {
+                   
                 }
             }
 
