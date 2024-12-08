@@ -25,6 +25,8 @@ public:
 		set_color(color);
 	}
 
+	virtual ~game_object() {}
+
 	//Called every frame (delta is the time between frame in seconds)
 	virtual void update(float delta) {}
 
@@ -126,22 +128,7 @@ public:
 				y_velocity = 0;
 			}
 		}
-		//Check if other object is an enemy
-		else if (type_of_other_object == "Enemy") {
-			//Colliding with a wall on the left side of the platform
-			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
-				set_left_wall_count(get_left_wall_count() + 1);
-			}
-			//Colliding with a wall on the right side of the platform
-			else if (get_x_position() + get_width() > other_position.x + other_size.x && get_y_position() > other_position.y - (get_height() - 10)) {
-				set_right_wall_count(get_right_wall_count() + 1);
-			}
-			//Colliding with the floor of a platform
-			else if (get_y_position() + get_height() < other_position.y + 10) {
-				set_floor_count(get_floor_count() + 1);
-			}
-			
-		}
+		
 	}
 
 	//Sets the collision counts to 0. Called at the beginning of the player's detect_collisions loop in the level manager
@@ -190,12 +177,11 @@ public:
 
 class enemy : public game_object {
 protected:
-<<<<<<< Updated upstream
-	//health is the amount of times the player has to jump on them
-	int health;
+
+	
 	//the speed is how fast the enemy is, but if we don't want to try to make enemies move we can just set this to 0 or delete it
 	int speed;
-=======
+
 
 	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
 	int left_wall_count = 0;
@@ -208,10 +194,22 @@ protected:
 	void set_move_speed(float move_speed) {
 		this->move_speed = move_speed;
 	}
-
+	void set_speed(int speed) {
+		this->speed = speed;
+	}
 public:
 
-	void on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override {
+
+	void change_Directions() {
+		this->speed = speed * -1;
+	}
+
+	int get_Speed() {
+		return speed;
+	}
+	
+
+	void on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {
 		
 		//Check if other object is an enemy
 		if (type_of_other_object == "Enemy") {
@@ -265,48 +263,35 @@ public:
 	}
 
 	//Enemy constructor
-	enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {}
+	enemy(int speed, float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {
+		set_speed(speed);
+	}
 	//Default constructor
 	enemy() = default;
 	//Destructor
 	~enemy() {};
 };
->>>>>>> Stashed changes
 
-	void set_speed(int speed) {
-		this->speed = speed;
-	}
-	void set_Health(int health) {
-		this->health = health;
-	}
+
+	
+
+
+
+	
+	
+
+	
+
+
+class ground_enemy: public enemy {
 
 public:
 
-<<<<<<< Updated upstream
-	void change_Directions() {
-		this->speed * -1;
-	}
-
-	int get_Speed() {
-		return speed;
-	}
-	int get_Health() {
-		return health;
-	}
-
-	enemy(int health, int speed, float x_position, float y_position, float width, float height, string type, Color color): game_object(x_position, y_position, width, height, type, color) {
-		set_Health(health);
-		set_speed(speed);
-	}
-
-
-
-=======
 	void update_movement(float delta) {
-		shape.move(get_move_speed() * delta,0);
+		shape.move(get_move_speed() * delta, 0);
 	}
 
-	
+
 	void update(float delta) override {
 
 		//Apply y velocity (jump)
@@ -327,12 +312,11 @@ public:
 	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {}
 	//Destructor
 	~ground_enemy() {};
->>>>>>> Stashed changes
+	
 };
+	
 
-
-<<<<<<< Updated upstream
-=======
+class flying_enemy: public enemy{
 
 
 public:
@@ -341,7 +325,7 @@ public:
 	//Destructor
 	~flying_enemy() {};
 };
->>>>>>> Stashed changes
+
 
 class end_goal : public game_object {
 protected:
