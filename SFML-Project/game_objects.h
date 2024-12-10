@@ -15,6 +15,8 @@ protected:
 	Vector2f inital_position; //The inital position of the object. Used to reset the objects position
 	string type; //The type of object ("Enemy", "Player", etc.)
 	RectangleShape shape; //The object's shape
+	Texture texture; //The object's texture
+	Sprite sprite; //The object's sprite
 public:
 	//Constructor
 	game_object(float x_position, float y_position, float width, float height, string type, Color color) {
@@ -23,9 +25,19 @@ public:
 		set_size(width,height);
 		set_type(type);
 		set_color(color);
+		if (type == "Platform") {
+			texture.loadFromFile("platform.PNG");
+			texture.setRepeated(true);
+			sprite.setTexture(texture);
+			sprite.setScale(3.125, 3.125);
+			sprite.setTextureRect(IntRect(0,0,width/ 3.125,height/ 3.125));
+			sprite.setPosition(x_position, y_position);
+		}
 	}
-
-	virtual ~game_object() {}
+	//Default constructor
+	game_object() = default;
+	//Destructor
+	~game_object(){};
 
 	//Called every frame (delta is the time between frame in seconds)
 	virtual void update(float delta) {}
@@ -44,6 +56,12 @@ public:
 		shape.move(0, 9.8 * fall_speed * delta);
 	}
 
+	//Updates the sprite
+	virtual void update_sprite() {
+		//Update the sprites position to be the same as the shape's position
+		set_sprite_position(Vector2f(get_x_position(), get_y_position()));
+	}
+
 	//Getters
 	Vector2f get_inital_position() { return inital_position; };
 	float get_x_position() { return shape.getPosition().x; };
@@ -53,12 +71,14 @@ public:
 	string get_type() {return type;}
 	RectangleShape get_shape() { return shape; };
 	Color get_color() { return shape.getFillColor(); };
+	Sprite get_sprite() { return sprite; }
 	//Setters
 	void set_inital_position(float x_position, float y_position) { inital_position.x = x_position; inital_position.y = y_position; };
 	void set_position(float x_position, float y_position) { shape.setPosition(Vector2f(x_position,y_position)); };
 	void set_size(float width, float height) { shape.setSize(Vector2f(width, height)); };
 	void set_type(string type) { this->type = type; };
 	void set_color(Color color) { shape.setFillColor(color); };
+	void set_sprite_position(Vector2f position) { sprite.setPosition(position); };
 };
 
 class player : public game_object {
@@ -72,7 +92,14 @@ protected:
 	float y_velocity = 0; //Y velocity
 public:
 	//Constructor
-	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {}
+	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {
+		texture.loadFromFile("player.PNG");
+		sprite.setTexture(texture);
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+		sprite.setPosition(x_position, y_position);
+	}
+	//Destructor
+	~player() {};
 
 	//Override update function
 	void update(float delta) override {
@@ -89,6 +116,8 @@ public:
 		//Apply gravity only if the player isn't touching the ground
 		if (get_floor_count() < 1)
 			apply_gravity(delta);
+
+		update_sprite();
 	}
 
 	//Update player's movement
@@ -175,6 +204,7 @@ public:
 	}
 };
 
+<<<<<<< HEAD
 
 
 class enemy : virtual public game_object {
@@ -195,8 +225,10 @@ public:
 
 
 
+=======
+>>>>>>> main
 class ground_enemy: public  game_object {
-private:
+protected:
 	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
 	int left_wall_count = 0;
 	int right_wall_count = 0;
@@ -208,7 +240,10 @@ private:
 	void set_move_speed(float move_speed) {
 		this->move_speed = move_speed;
 	}
+<<<<<<< HEAD
 
+=======
+>>>>>>> main
 
 public:
 
@@ -295,13 +330,10 @@ public:
 	}
 	//Destructor
 	~ground_enemy() {};
-	
 };
 	
 
 class flying_enemy: public game_object{
-
-
 public:
 	//Flying enemy constructor
 	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {};
@@ -316,6 +348,10 @@ protected:
 public:
 	end_goal(float x_position, float y_position, float width, float height, string type, Color color, int level) : game_object(x_position,y_position,width,height,type,color) {
 		set_level_to_load(level);
+		texture.loadFromFile("end_goal.PNG");
+		sprite.setTexture(texture);
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+		sprite.setPosition(x_position, y_position);
 	}
 
 	//Getter(s)
