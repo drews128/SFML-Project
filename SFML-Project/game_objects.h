@@ -398,6 +398,13 @@ public:
 	};
 	//Destructor
 	~flying_enemy() {};
+
+	void update(float delta) override {
+
+
+		//Update the sprite
+		update_sprite();
+	}
 };
 
 
