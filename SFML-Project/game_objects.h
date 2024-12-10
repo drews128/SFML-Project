@@ -25,6 +25,14 @@ public:
 		set_size(width,height);
 		set_type(type);
 		set_color(color);
+		if (type == "Platform") {
+			texture.loadFromFile("platform.PNG");
+			texture.setRepeated(true);
+			sprite.setTexture(texture);
+			sprite.setScale(3.125, 3.125);
+			sprite.setTextureRect(IntRect(0,0,width/ 3.125,height/ 3.125));
+			sprite.setPosition(x_position, y_position);
+		}
 	}
 	//Default constructor
 	game_object() = default;
@@ -85,7 +93,7 @@ protected:
 public:
 	//Constructor
 	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {
-		texture.loadFromFile("test_img.PNG");
+		texture.loadFromFile("player.PNG");
 		sprite.setTexture(texture);
 		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
 		sprite.setPosition(x_position, y_position);
@@ -238,6 +246,10 @@ protected:
 public:
 	end_goal(float x_position, float y_position, float width, float height, string type, Color color, int level) : game_object(x_position,y_position,width,height,type,color) {
 		set_level_to_load(level);
+		texture.loadFromFile("end_goal.PNG");
+		sprite.setTexture(texture);
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+		sprite.setPosition(x_position, y_position);
 	}
 
 	//Getter(s)

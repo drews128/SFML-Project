@@ -22,7 +22,7 @@ private:
     //IMPORTANT: Player should always be the first element in a level
     vector<game_object*> level_1 = {
         new player(10, 650, 50, 50, "Player", Color::Transparent),
-        new end_goal(1300, 600, 50, 50, "End Goal", Color::Green, 2),
+        new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 2),
         new game_object(0, 750, 250, 50, "Platform", Color::Black),
         new game_object(400, 650, 400, 150, "Platform", Color::Black),
         new game_object(1000, 650, 400, 150, "Platform", Color::Black),
