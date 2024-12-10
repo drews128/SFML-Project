@@ -43,7 +43,7 @@ public:
 	virtual void update(float delta) {}
 
 	//Called every time a collision is detected by the level manager
-	virtual void on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {}
+	virtual int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {return 0;}
 
 	//Resets the position of the object
 	void reset_position() {
@@ -137,7 +137,7 @@ public:
 	}
 
 	//Override on collision function
-	void on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override{
+	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override{
 		//Check if other object is a platform
 		if (type_of_other_object == "Platform") {
 			//Colliding with a wall on the left side of the platform
@@ -156,6 +156,22 @@ public:
 			else if (get_y_position() > other_position.y) {
 				y_velocity = 0;
 			}
+			return 0;
+		}
+		//i changed this function to an int becase when it returns, if its 1 it will reset_level, but i cant call that from here
+		else if (type_of_other_object == "Enemy") {
+			//Colliding with a wall on the left side of the platform
+			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
+				return 1;
+			}
+			//Colliding with a wall on the right side of the platform
+			else if (get_x_position() + get_width() > other_position.x + other_size.x && get_y_position() > other_position.y - (get_height() - 10)) {
+				return 1;
+			}
+			else if (get_y_position() > other_position.y) {
+				return 1;
+			}
+			return 0;
 		}
 		
 	}
@@ -204,22 +220,59 @@ public:
 	}
 };
 
+
+
+
+class enemy : virtual public game_object {
+protected:
+	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
+	int left_wall_count = 0;
+	int right_wall_count = 0;
+	int ceiling_count = 0;
+
+	float y_velocity = 0; //Y velocity
+	float move_speed = 50; //Movement speed
+
+
+	void set_move_speed(float move_speed) {
+		this->move_speed = move_speed;
+	}
+
+	
+public:
+	//Enemy constructor
+	enemy(float x_position, float y_position, float width, float height, string type, Color color, float move_Speed) : game_object(x_position, y_position, width, height, type, color) {
+	
+	}
+	//Default constructor
+	enemy() = default;
+	//Destructor
+	~enemy() {};
+};
+
+
+
 class ground_enemy: public  game_object {
 protected:
 	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
 	int left_wall_count = 0;
 	int right_wall_count = 0;
+	int ceiling_count = 0;
 
 	float y_velocity = 0; //Y velocity
 	float move_speed = 50; //Movement speed
 
+	
 	void set_move_speed(float move_speed) {
 		this->move_speed = move_speed;
 	}
 
 public:
 
-	void on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {
+	
+
+
+	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {
 
 		//Check if other object is an platform
 		if (type_of_other_object == "Platform") {
@@ -237,8 +290,25 @@ public:
 			else if (get_y_position() + get_height() < other_position.y + 10) {
 				set_floor_count(get_floor_count() + 1);
 			}
-
+			else if (get_y_position() > other_position.y) {
+				y_velocity = 0;
+			}
+			return 0;
 		}
+		//i changed this function to an int becase when it returns, if its 1 it will reset_level, but i cant call that from here
+		else if (type_of_other_object == "Player") {
+			//Colliding with a wall on the left side of the platform
+			if (get_y_position() > other_position.y) {
+				shape.move(2000, 1000);
+				return 0;
+			}
+			else {
+				reset_position();
+				return 1;
+			}
+			return 0;
+		}
+
 	}
 	void reset_collision_counts() {
 		set_floor_count(0);
@@ -264,7 +334,9 @@ public:
 	void set_right_wall_count(int new_num) {
 		right_wall_count = new_num;
 	}
-	
+	void set_ceiling_count(int new_num) {
+		ceiling_count = new_num;
+	}
 	float get_move_speed() {
 		return move_speed;
 	}
