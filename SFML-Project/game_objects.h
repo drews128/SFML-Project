@@ -39,8 +39,6 @@ public:
 	//Destructor
 	~game_object(){};
 
-	virtual ~game_object() {}
-
 	//Called every frame (delta is the time between frame in seconds)
 	virtual void update(float delta) {}
 
