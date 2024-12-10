@@ -366,11 +366,19 @@ public:
 		//Apply gravity only if the player isn't touching the ground
 		if (get_floor_count() < 1)
 			apply_gravity(delta);
+
+		update_sprite();
 	}
 
 	//Ground enemy constructor
 	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed) : game_object(x_position, y_position, width, height, type, color) {
 		set_move_speed(move_speed);
+
+		//Load texture image & apply to sprite
+		texture.loadFromFile("ground_enemy.PNG");
+		sprite.setTexture(texture);
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+		sprite.setPosition(x_position, y_position);
 	}
 	//Destructor
 	~ground_enemy() {};
@@ -380,9 +388,23 @@ public:
 class flying_enemy: public game_object{
 public:
 	//Flying enemy constructor
-	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {};
+	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {
+		
+		//Load texture image & apply to sprite
+		texture.loadFromFile("flying_enemy.PNG");
+		sprite.setTexture(texture);
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+		sprite.setPosition(x_position, y_position);
+	};
 	//Destructor
 	~flying_enemy() {};
+
+	void update(float delta) override {
+
+
+		//Update the sprite
+		update_sprite();
+	}
 };
 
 
