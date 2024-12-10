@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
 //Our files
@@ -10,6 +11,7 @@ using namespace std;
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 #include "SFML/System.hpp"
+#include <SFML/Audio.hpp>
 //SFML namespace
 using namespace sf;
 
@@ -23,6 +25,27 @@ int main()
     bool is_right_pressed = false;
     bool is_jump_pressed = false;
 
+    vector<string> audioFiles = {  
+       "jump.wav",   //jump                          0    keycodes for calling sound
+       "pop.wav",  //complete level                  1
+       "explode.wav", //death                        2
+       "click.wav",  //click                         3
+       "notify.wav", //notification ping              4
+       "background.wav"//background music              5
+    };
+    vector<SoundBuffer> soundBuffers(audioFiles.size()); //storing sound buffers
+    vector<Sound> sounds(audioFiles.size());
+
+    //creating loop to set each sound to each buffer
+    for (int i = 0; i < audioFiles.size(); ++i) {
+        if (!soundBuffers[i].loadFromFile(audioFiles[i])) {
+            cout << "Error loading sound file: " << audioFiles[i] << endl;
+            return -1;
+        }
+        sounds[i].setBuffer(soundBuffers[i]);
+    }
+
+    sounds[5].play();
     //Level manager
     level_manager levels = level_manager();
 
@@ -71,6 +94,22 @@ int main()
     //IMPORTANT: Make sure to mutliply any movement by delta so that it is frame independant!
     Time delta;
 
+
+    sf::SoundBuffer buffer;
+    if (!buffer.loadFromFile("pop.wav")) {
+        std::cerr << "Error loading sound file!" << std::endl;
+        return -1;
+    }
+
+    // Create a sound object and set its buffer
+    sf::Sound sound;
+    sound.setBuffer(buffer);
+
+    // Play the sound
+    sound.play();
+
+
+
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
 
@@ -82,6 +121,7 @@ int main()
                 //Left
                 if (input_event.key.code == Keyboard::A || input_event.key.code == Keyboard::Left) {
                     is_left_pressed = true;
+                   
                 }
                 //Right
                 if (input_event.key.code == Keyboard::D || input_event.key.code == Keyboard::Right) {
@@ -90,6 +130,10 @@ int main()
                 //Jump
                 if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
                     is_jump_pressed = true;
+                   
+                        sounds[0].play(); //can be pressed forever
+                    
+                  
                 }
             }
             //Check if inputs are released 
@@ -111,6 +155,7 @@ int main()
             //Close the window if the close window button is pressed or the escape button is pressed
             if (input_event.type == Event::Closed || input_event.type == Event::KeyPressed && input_event.key.code == Keyboard::Escape)
                 //Close the window
+                //sounds[2].play(); why this is instantly close the window
                 window.close();
         }
 
@@ -137,6 +182,7 @@ int main()
         //Draw every object in the level
         for (auto obj : *levels.get_current_level()) {
             window.draw(obj->get_shape());
+            window.draw(obj->get_sprite());
         }
 
         //Display the new frame
