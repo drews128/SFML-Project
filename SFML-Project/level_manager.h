@@ -27,6 +27,7 @@ private:
         new game_object(400, 650, 400, 150, "Platform", Color::Black),
         new game_object(1000, 650, 400, 150, "Platform", Color::Black),
         new ground_enemy(500, 400, 50, 50, "Enemy", Color::Red, 50),
+        new game_object(700, 600, 100, 300, "Platform", Color::Black),
     };
     //Level 2 vector
     vector<game_object*> level_2 = {
@@ -104,9 +105,7 @@ public:
                             //Call the on_collision function
                             enmy->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
                             
-                            if (enmy->get_right_wall_count() > 1 || enmy->get_left_wall_count() > 1) {
-                                enmy->change_direction();
-                            }
+                            
                             
                         }
                     }

@@ -200,10 +200,12 @@ public:
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_left_wall_count(get_left_wall_count() + 1);
+				change_direction();
 			}
 			//Colliding with a wall on the right side of the platform
 			else if (get_x_position() + get_width() > other_position.x + other_size.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_right_wall_count(get_right_wall_count() + 1);
+				change_direction();
 			}
 			//Colliding with the floor of a platform
 			else if (get_y_position() + get_height() < other_position.y + 10) {
