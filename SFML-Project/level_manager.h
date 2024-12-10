@@ -80,7 +80,9 @@ public:
                         if (plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
                             
-                            plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
+                            if (plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize())) {
+                                reset_level();
+                            }
 
                             //Check if object is the end goal
                             if (end_goal* goal = dynamic_cast<end_goal*>((*current_level)[j]))
@@ -105,7 +107,9 @@ public:
                             //Call the on_collision function
 
 
-                            enmy->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
+                            if (enmy->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize())) {
+                                reset_level();
+                            }
                             
                             
                             
@@ -129,6 +133,12 @@ public:
     void reset_level() {
         for (size_t i = 0; i < current_level->size(); i++) {
             (*current_level)[i]->reset_position();
+            //resets the direction an enemy is traveling 
+            if (ground_enemy* enmy = dynamic_cast<ground_enemy*>((*current_level)[i])) {
+                if (enmy->get_move_speed() < 0) {
+                    enmy->change_direction();
+                }
+            }
         }
     }
 
