@@ -157,6 +157,19 @@ public:
 				y_velocity = 0;
 			}
 		}
+		else if (type_of_other_object == "Enemy") {
+			//Colliding with a wall on the left side of the platform
+			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
+				reset_position();
+			}
+			//Colliding with a wall on the right side of the platform
+			else if (get_x_position() + get_width() > other_position.x + other_size.x && get_y_position() > other_position.y - (get_height() - 10)) {
+				reset_position();
+			}
+			else if (get_y_position() > other_position.y) {
+				reset_position();
+			}
+		}
 		
 	}
 
@@ -204,12 +217,23 @@ public:
 	}
 };
 
-<<<<<<< HEAD
+
 
 
 class enemy : virtual public game_object {
 protected:
-	float move_speed = 300; //Movement speed
+	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
+	int left_wall_count = 0;
+	int right_wall_count = 0;
+	int ceiling_count = 0;
+
+	float y_velocity = 0; //Y velocity
+	float move_speed = 50; //Movement speed
+
+
+	void set_move_speed(float move_speed) {
+		this->move_speed = move_speed;
+	}
 
 	
 public:
@@ -225,13 +249,12 @@ public:
 
 
 
-=======
->>>>>>> main
 class ground_enemy: public  game_object {
 protected:
 	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
 	int left_wall_count = 0;
 	int right_wall_count = 0;
+	int ceiling_count = 0;
 
 	float y_velocity = 0; //Y velocity
 	float move_speed = 50; //Movement speed
@@ -240,12 +263,11 @@ protected:
 	void set_move_speed(float move_speed) {
 		this->move_speed = move_speed;
 	}
-<<<<<<< HEAD
-
-=======
->>>>>>> main
 
 public:
+
+	
+
 
 	void on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {
 
@@ -265,8 +287,18 @@ public:
 			else if (get_y_position() + get_height() < other_position.y + 10) {
 				set_floor_count(get_floor_count() + 1);
 			}
+			else if (get_y_position() > other_position.y) {
+				y_velocity = 0;
+			}
 
 		}
+		else if (type_of_other_object == "Player") {
+			//Colliding with a wall on the left side of the platform
+			if (get_y_position() > other_position.y) {
+				shape.move(2000, 1000);
+			}
+		}
+
 	}
 	void reset_collision_counts() {
 		set_floor_count(0);
@@ -292,7 +324,9 @@ public:
 	void set_right_wall_count(int new_num) {
 		right_wall_count = new_num;
 	}
-	
+	void set_ceiling_count(int new_num) {
+		ceiling_count = new_num;
+	}
 	float get_move_speed() {
 		return move_speed;
 	}

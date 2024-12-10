@@ -103,6 +103,8 @@ public:
                         //Check if the object's shape is intersecting the enemies shape
                         if (enmy->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
+
+
                             enmy->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
                             
                             
