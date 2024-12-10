@@ -176,6 +176,25 @@ public:
 };
 
 
+
+class enemy : virtual public game_object {
+protected:
+	float move_speed = 300; //Movement speed
+
+	
+public:
+	//Enemy constructor
+	enemy(float x_position, float y_position, float width, float height, string type, Color color, float move_Speed) : game_object(x_position, y_position, width, height, type, color) {
+	
+	}
+	//Default constructor
+	enemy() = default;
+	//Destructor
+	~enemy() {};
+};
+
+
+
 class ground_enemy: public  game_object {
 private:
 	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
@@ -185,10 +204,10 @@ private:
 	float y_velocity = 0; //Y velocity
 	float move_speed = 50; //Movement speed
 
+	
 	void set_move_speed(float move_speed) {
 		this->move_speed = move_speed;
 	}
-	
 
 
 public:
