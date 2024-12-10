@@ -182,6 +182,7 @@ int main()
         //Draw every object in the level
         for (auto obj : *levels.get_current_level()) {
             window.draw(obj->get_shape());
+            window.draw(obj->get_sprite());
         }
 
         //Display the new frame
