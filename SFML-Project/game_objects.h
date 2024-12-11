@@ -307,16 +307,9 @@ protected:
 	int right_wall_count = 0;
 	int ceiling_count = 0;
 
-	float y_velocity = 0; //Y velocity
-	
-	
-	
-	
+	float y_velocity = 0; //Y velocity	
 
 public:
-	
-	
-
 
 	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override {
 
@@ -407,32 +400,38 @@ public:
 	//Ground enemy constructor
 
 	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed, int travel_distance) : enemy(x_position, y_position, width, height, type, color, move_speed, travel_distance), game_object(x_position, y_position, width, height, type, color) {
-		
-
-	
-
 		//Load texture image & apply to sprite
 		texture.loadFromFile("ground_enemy.PNG");
 		sprite.setTexture(texture);
 		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
 		sprite.setPosition(x_position, y_position);
-
-	}
+	};
 	//Destructor
 	~ground_enemy() {};
 };
 	
 
 class flying_enemy: public enemy{
-protected:
-	
-
 public:
 
-	 
+	//Flying enemy constructor
+	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed, int travel_distance) : enemy(x_position, y_position, width, height, type, color, move_speed, travel_distance), game_object(x_position, y_position, width, height, type, color) {
+		//Load texture image & apply to sprite
+		texture.loadFromFile("flying_enemy.PNG");
+		sprite.setTexture(texture);
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+		sprite.setPosition(x_position, y_position);
+	};
+
+	//Destructor
+	~flying_enemy() {};
+
+	void update(float delta) override {
+		//Update the sprite
+		update_sprite();
+	}
 
 	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override {
-
 		//i changed this function to an int because when it returns, if its 1 it will reset_level, but i cant call that from here
 		if (type_of_other_object == "Player") {
 			//Colliding with a wall on the left side of the platform
@@ -446,32 +445,6 @@ public:
 			}
 			return 0;
 		}
-
-	}
-
-	
-
-	//Flying enemy constructor
-
-	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed, int travel_distance) :enemy(x_position, y_position, width, height, type, color, move_speed, travel_distance), game_object(x_position, y_position, width, height, type, color) {};
-
-	
-		
-		//Load texture image & apply to sprite
-		texture.loadFromFile("flying_enemy.PNG");
-		sprite.setTexture(texture);
-		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
-		sprite.setPosition(x_position, y_position);
-	};
-
-	//Destructor
-	~flying_enemy() {};
-
-	void update(float delta) override {
-
-
-		//Update the sprite
-		update_sprite();
 	}
 };
 

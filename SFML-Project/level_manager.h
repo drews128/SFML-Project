@@ -26,10 +26,8 @@ private:
         new game_object(0, 750, 250, 50, "Platform", Color::Black),
         new game_object(400, 650, 450, 150, "Platform", Color::Black),
         new game_object(1000, 650, 400, 150, "Platform", Color::Black),
-
-        new ground_enemy(600, 400, 50, 50, "Enemy", Color::Red, 50, 200),
-         new flying_enemy(700, 500, 50, 50, "Enemy", Color::Red, 150, 500),
-
+        new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200),
+        new flying_enemy(700, 500, 50, 50, "Enemy", Color::Transparent, 150, 500),
     };
     //Level 2 vector
     vector<game_object*> level_2 = {
