@@ -53,7 +53,11 @@ int main()
     //file variables
     string userOn;
     int levelOn, timeOn;
-    //FILE IO
+
+
+
+
+   
 
    // get data from file
 
@@ -168,7 +172,7 @@ int main()
         cout << endl << "Enter Your Name:" << endl;
         cin >> player_name;
 
-        //TODO: Save player name to save file
+      
 
         levels.set_current_level(1);
 
