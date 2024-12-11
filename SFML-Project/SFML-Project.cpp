@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <time.h>
+
 using namespace std;
 
 //Our files
@@ -11,27 +14,103 @@ using namespace std;
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 #include "SFML/System.hpp"
-#include <SFML/Audio.hpp>
+#include <SFML/Audio.hpp> 
+#include <SFML/System/Clock.hpp> 
+
 //SFML namespace
 using namespace sf;
+
+//file out function
+void saveData(string player_name,int levelHere, int timeOn) {
+    string path = "playerStats.txt";
+    ofstream reader;
+    reader.open(path);
+    if(reader.is_open())
+    {
+       
+        reader << player_name << "," << levelHere <<","<< timeOn;
+                    
+    }
+    else
+    {
+        cout << "error reading from file" << endl;
+    }
+
+}
+
+
+
 
 int main()
 {
     //Variables
     string player_name;
-    int user_seleciton;
+    int user_selection;
     //Player input variables
     bool is_left_pressed = false;
     bool is_right_pressed = false;
     bool is_jump_pressed = false;
+    //file variables
+    string userOn;
+    int levelOn, timeOn;
+
+
+
+
+   
+
+   // get data from file
+
+    
+
+    string path = "playerStats.txt";
+    ifstream reader;
+    reader.open(path);
+    if (reader.is_open())
+    {
+
+        string name_s, level_i, time_i;
+        double level, time;
+
+        getline(reader, name_s, ',');
+        getline(reader, level_i, ',');
+
+        level = stoi(level_i);
+
+        getline(reader, time_i);
+        try {
+        
+            time = stoi(time_i);
+        
+        }
+        catch(const std::out_of_range&){ 
+            time = 0;
+            cout << "overflow error reverting to 0" << endl;
+        }
+       
+       
+
+        userOn = name_s;
+        levelOn = level;
+        timeOn = time;
+    }
+    else {
+        cout << "failed to read from file" << endl;
+    }
+    reader.close();
+    //cout << userOn<<" "<< levelOn<<" " << timeOn << endl; //debug
+
+
+
+        //SOUND
 
     vector<string> audioFiles = {  
        "jump.wav",   //jump                          0    keycodes for calling sound
        "pop.wav",  //complete level                  1
        "explode.wav", //death                        2
        "click.wav",  //click                         3
-       "notify.wav", //notification ping              4
-       "background.wav"//background music              5
+       "notify.wav", //notification ping             4
+       "background.wav"//background music            5
     };
     vector<SoundBuffer> soundBuffers(audioFiles.size()); //storing sound buffers
     vector<Sound> sounds(audioFiles.size());
@@ -44,39 +123,77 @@ int main()
         }
         sounds[i].setBuffer(soundBuffers[i]);
     }
-
+   
+    sounds[5].setPitch(0.75f); //speed modifier and pitch
+    sounds[5].setLoop(true); //loops forever
+    sounds[5].setVolume(90.0f); //100 is default and max
     sounds[5].play();
+
+    //Tracking time
+
+    Clock clock;
+
+    
+     Time time1 = clock.getElapsedTime();
+     Time time2 = clock.restart();
+
+    
+     int hours = timeOn / 3600;
+     int smallMinutes = timeOn / 60;
+     int smallSeconds = timeOn;
+     while (smallMinutes >= 60)
+     {
+         smallMinutes -= 60;
+     }
+     while (smallSeconds > 60)
+     {
+         smallSeconds -= 60;
+     }
+
+
+
+
+
     //Level manager
     level_manager levels = level_manager();
 
+
+   
+   
     //Inital message
-    cout << "Welcome to [GAME TITLE GOES HERE]!" << endl;
+    cout << "Welcome to SFML.SLIME!" << endl;
     //New game or continue
     cout << "1. Start New Game" << endl << "2. Continue From Existing Save File" << endl;
     //Get user selection
-    cin >> user_seleciton;
-    switch(user_seleciton){
+    cin >> user_selection;
+    switch(user_selection){
     case 1:
         //New game
         cout << endl << "Enter Your Name:" << endl;
         cin >> player_name;
 
-        //TODO: Save player name to save file
+      
 
         levels.set_current_level(1);
 
         break;
     case 2:
-        //Continue
+       
 
-        //TODO: Add continuing from save file
-
+   
+        
+            player_name = userOn;
+       //     cout << timeOn<<endl<<" h "<<hours << " m " << smallMinutes << " s "  <<smallSeconds<<endl;
+        
         //Code for testing only, should be setting it to whatever the saved level id is
-        levels.set_current_level(1);
-
+        levels.set_current_level(levelOn);
+        cout << "Welcome back " << player_name<<"!"<<endl;
+        cout << "Current Playtime "<<hours<<":"<<smallMinutes<<":"<<smallSeconds<<endl;
+       
+      
         break;
     default:
-        //Invalid input handling
+        
         cout << endl << "Invalid input!" << endl;
         return -1;
         break;
@@ -93,22 +210,14 @@ int main()
     //Time between each frame
     //IMPORTANT: Make sure to mutliply any movement by delta so that it is frame independant!
     Time delta;
+  
 
+  
+   
 
-    sf::SoundBuffer buffer;
-    if (!buffer.loadFromFile("pop.wav")) {
-        std::cerr << "Error loading sound file!" << std::endl;
-        return -1;
-    }
+   
 
-    // Create a sound object and set its buffer
-    sf::Sound sound;
-    sound.setBuffer(buffer);
-
-    // Play the sound
-    sound.play();
-
-
+   
 
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
@@ -130,7 +239,7 @@ int main()
                 //Jump
                 if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
                     is_jump_pressed = true;
-                   
+                    
                         sounds[0].play(); //can be pressed forever
                     
                   
@@ -149,14 +258,25 @@ int main()
                 //Jump
                 if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
                     is_jump_pressed = false;
+                  
                 }
             }
 
             //Close the window if the close window button is pressed or the escape button is pressed
-            if (input_event.type == Event::Closed || input_event.type == Event::KeyPressed && input_event.key.code == Keyboard::Escape)
+            if (input_event.type == Event::Closed || (input_event.type == Event::KeyPressed && input_event.key.code == Keyboard::Escape)) {
+
                 //Close the window
-                //sounds[2].play(); why this is instantly close the window
+                sounds[2].play();
+                int levelHere = levels.get_current_level_id();
+
+                Time elapsed = clock.getElapsedTime(); //gets current time since program launch
+                int seconds = static_cast<int>(elapsed.asSeconds()); //sets it in seconds
+                timeOn += seconds;
+                
+                saveData(player_name, levelHere,timeOn );
+               
                 window.close();
+            }
         }
 
 

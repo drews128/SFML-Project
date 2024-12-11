@@ -81,6 +81,7 @@ public:
                             //Call the on_collision function
                             
                             if (plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize())) {
+                                //sounds[2].play();
                                 reset_level();
                             }
 
@@ -166,6 +167,7 @@ public:
         else if (current_level == &level_2) {
             return 2;
         }
+        return 0;
     }
     //Setters
     void set_current_level(int level_id) {
