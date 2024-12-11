@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <time.h>
 using namespace std;
 
 //Our files
@@ -211,16 +212,17 @@ int main()
             }
 
             //Close the window if the close window button is pressed or the escape button is pressed
-            if (input_event.type == Event::Closed || (input_event.type == Event::KeyPressed && input_event.key.code == Keyboard::Escape))
+            if (input_event.type == Event::Closed || (input_event.type == Event::KeyPressed && input_event.key.code == Keyboard::Escape)) {
 
                 //Close the window
-                //sounds[2].play(); why this is instantly close the window
-             //   int levelHere = levels.get_current_level_id();
-           // cout << levels.get_current_level();
+                sounds[2].play();
+                int levelHere = levels.get_current_level_id();
+         
 
-            //    saveData(player_name, levelHere);
-                cout << "test";
+                saveData(player_name, levelHere);
+               
                 window.close();
+            }
         }
 
 
