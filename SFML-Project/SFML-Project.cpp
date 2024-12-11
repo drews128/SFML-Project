@@ -3,6 +3,7 @@
 #include <vector>
 #include <fstream>
 #include <time.h>
+
 using namespace std;
 
 //Our files
@@ -13,19 +14,21 @@ using namespace std;
 #include "SFML/Graphics.hpp"
 #include "SFML/Window.hpp"
 #include "SFML/System.hpp"
-#include <SFML/Audio.hpp>
+#include <SFML/Audio.hpp> 
+#include <SFML/System/Clock.hpp> 
+
 //SFML namespace
 using namespace sf;
 
 //file out function
-void saveData(string player_name,int levelHere) {
+void saveData(string player_name,int levelHere, int timeOn) {
     string path = "playerStats.txt";
     ofstream reader;
     reader.open(path);
     if(reader.is_open())
     {
        
-        reader << player_name << "," << levelHere <<","<< /*gettime*/3;
+        reader << player_name << "," << levelHere <<","<< timeOn;
                     
     }
     else
@@ -53,6 +56,9 @@ int main()
     //FILE IO
 
    // get data from file
+
+    
+
     string path = "playerStats.txt";
     ifstream reader;
     reader.open(path);
@@ -68,7 +74,17 @@ int main()
         level = stoi(level_i);
 
         getline(reader, time_i);
-        time = stoi(time_i);
+        try {
+        
+            time = stoi(time_i);
+        
+        }
+        catch(const std::out_of_range&){ 
+            time = 0;
+            cout << "overflow error reverting to 0" << endl;
+        }
+       
+       
 
         userOn = name_s;
         levelOn = level;
@@ -109,10 +125,37 @@ int main()
     sounds[5].setVolume(90.0f); //100 is default and max
     sounds[5].play();
 
+    //Tracking time
+
+    Clock clock;
+
+    
+     Time time1 = clock.getElapsedTime();
+     Time time2 = clock.restart();
+
+    
+     int hours = timeOn / 3600;
+     int smallMinutes = timeOn / 60;
+     int smallSeconds = timeOn;
+     while (smallMinutes >= 60)
+     {
+         smallMinutes -= 60;
+     }
+     while (smallSeconds > 60)
+     {
+         smallSeconds -= 60;
+     }
+
+
+
+
 
     //Level manager
     level_manager levels = level_manager();
 
+
+   
+   
     //Inital message
     cout << "Welcome to SFML.SLIME!" << endl;
     //New game or continue
@@ -131,18 +174,22 @@ int main()
 
         break;
     case 2:
-        //Continue
+       
 
-        //TODO: Add continuing from save file
+   
         
             player_name = userOn;
+       //     cout << timeOn<<endl<<" h "<<hours << " m " << smallMinutes << " s "  <<smallSeconds<<endl;
         
         //Code for testing only, should be setting it to whatever the saved level id is
         levels.set_current_level(levelOn);
-
+        cout << "Welcome back " << player_name<<"!"<<endl;
+        cout << "Current Playtime "<<hours<<":"<<smallMinutes<<":"<<smallSeconds<<endl;
+       
+      
         break;
     default:
-        //Invalid input handling
+        
         cout << endl << "Invalid input!" << endl;
         return -1;
         break;
@@ -159,7 +206,7 @@ int main()
     //Time between each frame
     //IMPORTANT: Make sure to mutliply any movement by delta so that it is frame independant!
     Time delta;
-    int  levelHere = 1;
+  
 
   
    
@@ -217,9 +264,12 @@ int main()
                 //Close the window
                 sounds[2].play();
                 int levelHere = levels.get_current_level_id();
-         
 
-                saveData(player_name, levelHere);
+                Time elapsed = clock.getElapsedTime(); //gets current time since program launch
+                int seconds = static_cast<int>(elapsed.asSeconds()); //sets it in seconds
+                timeOn += seconds;
+                
+                saveData(player_name, levelHere,timeOn );
                
                 window.close();
             }
