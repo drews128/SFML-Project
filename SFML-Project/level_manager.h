@@ -24,10 +24,10 @@ private:
         new player(10, 650, 50, 50, "Player", Color::Transparent),
         new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 2),
         new game_object(0, 750, 250, 50, "Platform", Color::Black),
-        new game_object(400, 650, 400, 150, "Platform", Color::Black),
+        new game_object(400, 650, 450, 150, "Platform", Color::Black),
         new game_object(1000, 650, 400, 150, "Platform", Color::Black),
-        new ground_enemy(500, 400, 50, 50, "Enemy", Color::Red, 50),
-        new game_object(700, 600, 100, 300, "Platform", Color::Black),
+        new ground_enemy(600, 400, 50, 50, "Enemy", Color::Red, 50, 200),
+         new flying_enemy(700, 500, 50, 50, "Enemy", Color::Red, 150, 500),
     };
     //Level 2 vector
     vector<game_object*> level_2 = {
@@ -53,6 +53,10 @@ public:
             else if (ground_enemy* enmy = dynamic_cast<ground_enemy*>(obj)) {
                 enmy->update_movement(delta.asMicroseconds() / 1'000'000.0f);
                 
+            }
+            else if (flying_enemy* fly_enmy = dynamic_cast<flying_enemy*>(obj)) {
+                fly_enmy->update_movement(delta.asMicroseconds() / 1'000'000.0f);
+
             }
             
             obj->update(delta.asMicroseconds() / 1'000'000.0f);
@@ -116,11 +120,49 @@ public:
                         }
                     }
                 }
-
+                /*
+                * //i had to comment this out because when the player would kill an enemy, then die the killed enemies would not respawn because they were removed
                 //Check if the enemy is out of bounds and remove them from the vector
                 if (enmy->get_y_position() > 1000) {
-                   
+                   //remove the j-ith index of the vector
+                    current_level->erase(current_level->begin() + i);
+
+                    // 
+                    i--;
                 }
+                */
+            }
+            else if (flying_enemy* fly_enmy = dynamic_cast<flying_enemy*>((*current_level)[i])) {
+                
+
+                for (size_t j = 0; j < current_level->size(); j++) {
+                    //Make sure we aren't currently trying to check the enemy with itself
+                    if (i != j) {
+                        //Check if the object's shape is intersecting the enemies shape
+                        if (fly_enmy->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
+                            //Call the on_collision function
+
+
+                            if (fly_enmy->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize())) {
+                                reset_level();
+                            }
+
+
+
+                        }
+                    }
+                }
+                /*
+                * //i had to comment this out because when the player would kill an enemy, then die the killed enemies would not respawn becase they were removed
+                //Check if the enemy is out of bounds and remove them from the vector
+                if (fly_enmy->get_y_position() > 1000) {
+                    //remove the j-ith index of the vector
+                    current_level->erase(current_level->begin() + i);
+
+                    // 
+                    i--;
+                }
+                */
             }
 
 
@@ -134,10 +176,8 @@ public:
         for (size_t i = 0; i < current_level->size(); i++) {
             (*current_level)[i]->reset_position();
             //resets the direction an enemy is traveling 
-            if (ground_enemy* enmy = dynamic_cast<ground_enemy*>((*current_level)[i])) {
-                if (enmy->get_move_speed() < 0) {
-                    enmy->change_direction();
-                }
+            if (enemy* enmy = dynamic_cast<enemy*>((*current_level)[i]) ) {
+                 enmy->reset_move_speed();
             }
         }
     }

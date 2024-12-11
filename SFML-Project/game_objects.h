@@ -158,7 +158,7 @@ public:
 			}
 			return 0;
 		}
-		//i changed this function to an int becase when it returns, if its 1 it will reset_level, but i cant call that from here
+		//i changed this function to an int because when it returns, if its 1 it will reset_level, but i cant call that from here
 		else if (type_of_other_object == "Enemy") {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
@@ -225,24 +225,72 @@ public:
 
 class enemy : virtual public game_object {
 protected:
-	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
-	int left_wall_count = 0;
-	int right_wall_count = 0;
-	int ceiling_count = 0;
 
-	float y_velocity = 0; //Y velocity
 	float move_speed = 50; //Movement speed
+	float initial_move_speed = 50;
+	int travel_distance;
 
-
+	void set_initial_move_speed(float initial_move_speed) {
+		this->initial_move_speed = initial_move_speed;
+	}
 	void set_move_speed(float move_speed) {
 		this->move_speed = move_speed;
+		
 	}
+	
 
+	void set_travel_distance(int flying_distance) {
+		this->travel_distance = flying_distance;
+	}
 	
 public:
-	//Enemy constructor
-	enemy(float x_position, float y_position, float width, float height, string type, Color color, float move_Speed) : game_object(x_position, y_position, width, height, type, color) {
+
+
+	void update_movement(float delta)  {
+		if (get_move_speed() < 0) {
+			if (get_inital_position().x - get_x_position() >= get_travel_distance()) {
+				change_direction();
+			}
+		}
+		else if (get_move_speed() > 0) {
+			if (get_x_position() - get_inital_position().x >= get_travel_distance()) {
+				change_direction();
+			}
+		}
+		
+
+		shape.move(get_move_speed() * delta, 0);
+	}
 	
+
+	virtual int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) { return 0; }
+
+	int get_travel_distance() {
+		return travel_distance;
+	}
+	float get_initial_move_speed() {
+		return initial_move_speed;
+	}
+	void reset_move_speed() {
+		set_move_speed(get_initial_move_speed());
+	}
+	
+	float get_move_speed() {
+		return move_speed;
+	}
+	void change_direction() {
+		set_move_speed(get_move_speed() * -1);
+
+	}
+	void update(float delta) override {
+		update_sprite();
+	}
+
+	//Enemy constructor
+	enemy(float x_position, float y_position, float width, float height, string type, Color color, float move_speed, int travel_distance) : game_object(x_position, y_position, width, height, type, color) {
+		set_move_speed(move_speed);
+		set_travel_distance(travel_distance);
+		set_initial_move_speed(move_speed);
 	}
 	//Default constructor
 	enemy() = default;
@@ -252,7 +300,7 @@ public:
 
 
 
-class ground_enemy: public  game_object {
+class ground_enemy: public  enemy {
 protected:
 	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
 	int left_wall_count = 0;
@@ -260,19 +308,17 @@ protected:
 	int ceiling_count = 0;
 
 	float y_velocity = 0; //Y velocity
-	float move_speed = 50; //Movement speed
-
 	
-	void set_move_speed(float move_speed) {
-		this->move_speed = move_speed;
-	}
+	
+	
+	
 
 public:
-
+	
 	
 
 
-	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {
+	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override {
 
 		//Check if other object is an platform
 		if (type_of_other_object == "Platform") {
@@ -295,7 +341,7 @@ public:
 			}
 			return 0;
 		}
-		//i changed this function to an int becase when it returns, if its 1 it will reset_level, but i cant call that from here
+		//i changed this function to an int because when it returns, if its 1 it will reset_level, but i cant call that from here
 		else if (type_of_other_object == "Player") {
 			//Colliding with a wall on the left side of the platform
 			if (get_y_position() > other_position.y) {
@@ -337,19 +383,7 @@ public:
 	void set_ceiling_count(int new_num) {
 		ceiling_count = new_num;
 	}
-	float get_move_speed() {
-		return move_speed;
-	}
-
-	void change_direction() {
-		set_move_speed(get_move_speed() * -1);
-		
-	}
-
-
-	void update_movement(float delta) {
-		shape.move(get_move_speed() * delta, 0);
-	}
+	
 
 
 	void update(float delta) override {
@@ -366,21 +400,49 @@ public:
 		//Apply gravity only if the player isn't touching the ground
 		if (get_floor_count() < 1)
 			apply_gravity(delta);
+
+		update_sprite();
 	}
 
 	//Ground enemy constructor
-	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed) : game_object(x_position, y_position, width, height, type, color) {
-		set_move_speed(move_speed);
+	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed, int travel_distance) : enemy(x_position, y_position, width, height, type, color, move_speed, travel_distance), game_object(x_position, y_position, width, height, type, color) {
+		
 	}
 	//Destructor
 	~ground_enemy() {};
 };
 	
 
-class flying_enemy: public game_object{
+class flying_enemy: public enemy{
+protected:
+	
+
 public:
+
+	 
+
+	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override {
+
+		//i changed this function to an int because when it returns, if its 1 it will reset_level, but i cant call that from here
+		if (type_of_other_object == "Player") {
+			//Colliding with a wall on the left side of the platform
+			if (get_y_position() > other_position.y) {
+				shape.move(2000, 1000);
+				return 0;
+			}
+			else {
+				reset_position();
+				return 1;
+			}
+			return 0;
+		}
+
+	}
+
+	
+
 	//Flying enemy constructor
-	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {};
+	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed, int travel_distance) :enemy(x_position, y_position, width, height, type, color, move_speed, travel_distance), game_object(x_position, y_position, width, height, type, color) {};
 	//Destructor
 	~flying_enemy() {};
 };
