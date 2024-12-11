@@ -93,7 +93,10 @@ int main()
         try {
         
             time = stoi(time_i);
-        
+            if (time <0)
+            {
+                time = 0; cout << "reverting time to 0"<<endl;
+            }
         }
         catch(const out_of_range&){ 
             time = 0;
