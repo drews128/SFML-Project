@@ -159,6 +159,14 @@ public:
     vector<game_object*>* get_current_level() const {
         return current_level;
     }
+    int get_current_level_id() {
+        if (current_level == &level_1) {
+            return 1;
+        }
+        else if (current_level == &level_2) {
+            return 2;
+        }
+    }
     //Setters
     void set_current_level(int level_id) {
         switch (level_id) {
