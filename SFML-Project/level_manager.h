@@ -179,8 +179,9 @@ public:
             current_level = &level_2;
             break;
         default:
-            cout << "Invalid Level ID: " << level_id << endl;
+            cout << "Invalid Level ID: setting to 1 " << endl;
             current_level = nullptr;
+            set_current_level(1);
             break;
         }
     }

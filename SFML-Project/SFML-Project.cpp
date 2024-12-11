@@ -74,16 +74,31 @@ int main()
 
         getline(reader, name_s, ',');
         getline(reader, level_i, ',');
+        try {
 
-        level = stoi(level_i);
+            level = stoi(level_i);
+
+        }
+        catch (const out_of_range&) {
+            level = 1;
+            cout << "out of range error reverting to 0" << endl;
+        }
+        catch (const invalid_argument& e) {
+            level = 1;
+            cout << "out of range error reverting to 0" << endl;
+        }
+       
 
         getline(reader, time_i);
         try {
         
             time = stoi(time_i);
-        
+            if (time <0)
+            {
+                time = 0; cout << "reverting time to 0"<<endl;
+            }
         }
-        catch(const std::out_of_range&){ 
+        catch(const out_of_range&){ 
             time = 0;
             cout << "overflow error reverting to 0" << endl;
         }
