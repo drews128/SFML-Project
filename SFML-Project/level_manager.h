@@ -167,7 +167,7 @@ public:
         else if (current_level == &level_2) {
             return 2;
         }
-        return 0;
+        return 1;
     }
     //Setters
     void set_current_level(int level_id) {
