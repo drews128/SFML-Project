@@ -405,8 +405,18 @@ public:
 	}
 
 	//Ground enemy constructor
+
 	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed, int travel_distance) : enemy(x_position, y_position, width, height, type, color, move_speed, travel_distance), game_object(x_position, y_position, width, height, type, color) {
 		
+
+	
+
+		//Load texture image & apply to sprite
+		texture.loadFromFile("ground_enemy.PNG");
+		sprite.setTexture(texture);
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+		sprite.setPosition(x_position, y_position);
+
 	}
 	//Destructor
 	~ground_enemy() {};
@@ -442,9 +452,27 @@ public:
 	
 
 	//Flying enemy constructor
+
 	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed, int travel_distance) :enemy(x_position, y_position, width, height, type, color, move_speed, travel_distance), game_object(x_position, y_position, width, height, type, color) {};
+
+	
+		
+		//Load texture image & apply to sprite
+		texture.loadFromFile("flying_enemy.PNG");
+		sprite.setTexture(texture);
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+		sprite.setPosition(x_position, y_position);
+	};
+
 	//Destructor
 	~flying_enemy() {};
+
+	void update(float delta) override {
+
+
+		//Update the sprite
+		update_sprite();
+	}
 };
 
 

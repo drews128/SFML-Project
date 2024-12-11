@@ -26,8 +26,10 @@ private:
         new game_object(0, 750, 250, 50, "Platform", Color::Black),
         new game_object(400, 650, 450, 150, "Platform", Color::Black),
         new game_object(1000, 650, 400, 150, "Platform", Color::Black),
+
         new ground_enemy(600, 400, 50, 50, "Enemy", Color::Red, 50, 200),
          new flying_enemy(700, 500, 50, 50, "Enemy", Color::Red, 150, 500),
+
     };
     //Level 2 vector
     vector<game_object*> level_2 = {
@@ -85,6 +87,7 @@ public:
                             //Call the on_collision function
                             
                             if (plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize())) {
+                                //sounds[2].play();
                                 reset_level();
                             }
 
@@ -147,7 +150,7 @@ public:
                                 reset_level();
                             }
 
-
+  
 
                         }
                     }
@@ -199,6 +202,15 @@ public:
     vector<game_object*>* get_current_level() const {
         return current_level;
     }
+    int get_current_level_id() {
+        if (current_level == &level_1) {
+            return 1;
+        }
+        else if (current_level == &level_2) {
+            return 2;
+        }
+        return 1;
+    }
     //Setters
     void set_current_level(int level_id) {
         switch (level_id) {
@@ -209,8 +221,9 @@ public:
             current_level = &level_2;
             break;
         default:
-            cout << "Invalid Level ID: " << level_id << endl;
+            cout << "Invalid Level ID: setting to 1 " << endl;
             current_level = nullptr;
+            set_current_level(1);
             break;
         }
     }
