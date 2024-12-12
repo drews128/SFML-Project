@@ -27,13 +27,20 @@ private:
         new game_object(400, 650, 450, 150, "Platform", Color::Black),
         new game_object(1000, 650, 400, 150, "Platform", Color::Black),
         new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200),
-        new flying_enemy(700, 500, 50, 50, "Enemy", Color::Transparent, 150, 500),
     };
     //Level 2 vector
     vector<game_object*> level_2 = {
-        new player(320, 50, 50, 50, "Player", Color::Transparent),
-        new game_object(320, 610, 400, 100, "Platform", Color::Black),
-        new game_object(500, 610, 400, 100, "Platform", Color::Black)
+        new player(10, 650, 50, 50, "Player", Color::Transparent),
+        new game_object(0,750,250,50,"Platform",Color::Transparent),
+        new game_object(350,650,250,50,"Platform",Color::Transparent),
+        new ground_enemy(450, 600, 50, 50, "Enemy", Color::Transparent, 50, 100),
+        new game_object(650,250,100,700,"Platform",Color::Transparent),
+        new game_object(0,500,250,50,"Platform",Color::Transparent),
+        new game_object(350,350,150,50,"Platform",Color::Transparent),
+        new game_object(550,200,300,50,"Platform",Color::Transparent),
+        new flying_enemy(675,100,50,50,"Enemy",Color::Transparent,150,200),
+        new game_object(1000,500,300,50,"Platform",Color::Transparent),
+        new end_goal(1150,450,50,50,"End Goal", Color::Transparent, 3),
     };
 
 public:
@@ -220,8 +227,7 @@ public:
             break;
         default:
             cout << "Invalid Level ID: setting to 1 " << endl;
-            current_level = nullptr;
-            set_current_level(1);
+            current_level = &level_1;
             break;
         }
     }
