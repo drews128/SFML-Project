@@ -20,49 +20,36 @@ using namespace std;
 //SFML namespace
 using namespace sf;
 
-//file out function
+//File-out function
 void saveData(string player_name,int levelHere, int timeOn) {
     string path = "playerStats.txt";
     ofstream reader;
     reader.open(path);
     if(reader.is_open())
     {
-       
-        reader << player_name << "," << levelHere <<","<< timeOn;
-                    
+        reader << player_name << "," << levelHere <<","<< timeOn;   
     }
     else
     {
         cout << "error reading from file" << endl;
     }
-
 }
 
-
-
-
+//Main function
 int main()
 {
     //Variables
-    string player_name;
-    int user_selection;
+    string player_name;     //Saves the player's name
+    int user_selection;     //Stores user's input
     //Player input variables
     bool is_left_pressed = false;
     bool is_right_pressed = false;
     bool is_jump_pressed = false;
-    //file variables
+    //File variables
     string userOn;
     int levelOn, timeOn;
 
-
-
-
-   
-
-   // get data from file
-
-    
-
+    //Get data from file
     string path = "playerStats.txt";
     ifstream reader;
     reader.open(path);
@@ -88,8 +75,6 @@ int main()
             cout << "overflow error reverting to 0" << endl;
         }
        
-       
-
         userOn = name_s;
         levelOn = level;
         timeOn = time;
@@ -100,22 +85,19 @@ int main()
     reader.close();
     //cout << userOn<<" "<< levelOn<<" " << timeOn << endl; //debug
 
-
-
-        //SOUND
-
+    //SOUND
     vector<string> audioFiles = {  
-       "jump.wav",   //jump                          0    keycodes for calling sound
-       "pop.wav",  //complete level                  1
-       "explode.wav", //death                        2
-       "click.wav",  //click                         3
-       "notify.wav", //notification ping             4
-       "background.wav"//background music            5
+       "jump.wav",     //jump                         0   - Keycodes for calling sound
+       "pop.wav",      //complete level               1
+       "explode.wav",  //death                        2
+       "click.wav",    //click                        3
+       "notify.wav",   //notification ping            4
+       "background.wav"//background music             5
     };
-    vector<SoundBuffer> soundBuffers(audioFiles.size()); //storing sound buffers
+    vector<SoundBuffer> soundBuffers(audioFiles.size()); //Storing sound buffers
     vector<Sound> sounds(audioFiles.size());
 
-    //creating loop to set each sound to each buffer
+    //Set each sound to each buffer
     for (int i = 0; i < audioFiles.size(); ++i) {
         if (!soundBuffers[i].loadFromFile(audioFiles[i])) {
             cout << "Error loading sound file: " << audioFiles[i] << endl;
@@ -130,36 +112,25 @@ int main()
     sounds[5].play();
 
     //Tracking time
-
     Clock clock;
+    Time time1 = clock.getElapsedTime();
+    Time time2 = clock.restart();
 
-    
-     Time time1 = clock.getElapsedTime();
-     Time time2 = clock.restart();
-
-    
-     int hours = timeOn / 3600;
-     int smallMinutes = timeOn / 60;
-     int smallSeconds = timeOn;
-     while (smallMinutes >= 60)
-     {
+    int hours = timeOn / 3600;
+    int smallMinutes = timeOn / 60;
+    int smallSeconds = timeOn;
+    while (smallMinutes >= 60)
+    {
          smallMinutes -= 60;
-     }
-     while (smallSeconds > 60)
-     {
+    }
+    while (smallSeconds > 60)
+    {
          smallSeconds -= 60;
-     }
-
-
-
-
+    }
 
     //Level manager
     level_manager levels = level_manager();
 
-
-   
-   
     //Inital message
     cout << "Welcome to SFML.SLIME!" << endl;
     //New game or continue
@@ -169,31 +140,26 @@ int main()
     switch(user_selection){
     case 1:
         //New game
+        //Ask user for name
         cout << endl << "Enter Your Name:" << endl;
         cin >> player_name;
-
-      
-
+        //Set the current level to the first
         levels.set_current_level(1);
 
         break;
     case 2:
-       
-
-   
         
-            player_name = userOn;
-       //     cout << timeOn<<endl<<" h "<<hours << " m " << smallMinutes << " s "  <<smallSeconds<<endl;
+        player_name = userOn;
+        //cout << timeOn<<endl<<" h "<<hours << " m " << smallMinutes << " s "  <<smallSeconds<<endl;
         
         //Code for testing only, should be setting it to whatever the saved level id is
         levels.set_current_level(levelOn);
         cout << "Welcome back " << player_name<<"!"<<endl;
         cout << "Current Playtime "<<hours<<":"<<smallMinutes<<":"<<smallSeconds<<endl;
-       
       
         break;
     default:
-        
+        //Invalid input
         cout << endl << "Invalid input!" << endl;
         return -1;
         break;
@@ -210,21 +176,12 @@ int main()
     //Time between each frame
     //IMPORTANT: Make sure to mutliply any movement by delta so that it is frame independant!
     Time delta;
-  
-
-  
-   
-
-   
-
-   
 
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
 
         //Detect user inputs
         while (window.pollEvent(input_event)) {
-
             //Check if inputs pressed down
             if (input_event.type == Event::KeyPressed) {
                 //Left
@@ -239,10 +196,7 @@ int main()
                 //Jump
                 if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
                     is_jump_pressed = true;
-                    
-                        sounds[0].play(); //can be pressed forever
-                    
-                  
+                    sounds[0].play();
                 }
             }
             //Check if inputs are released 
@@ -258,14 +212,12 @@ int main()
                 //Jump
                 if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
                     is_jump_pressed = false;
-                  
                 }
             }
 
             //Close the window if the close window button is pressed or the escape button is pressed
             if (input_event.type == Event::Closed || (input_event.type == Event::KeyPressed && input_event.key.code == Keyboard::Escape)) {
-
-                //Close the window
+                //Save progress
                 sounds[2].play();
                 int levelHere = levels.get_current_level_id();
 
@@ -273,17 +225,15 @@ int main()
                 int seconds = static_cast<int>(elapsed.asSeconds()); //sets it in seconds
                 timeOn += seconds;
                 
-                saveData(player_name, levelHere,timeOn );
-               
+                saveData(player_name, levelHere, timeOn);
+
+                //Close the window
                 window.close();
             }
         }
 
-
-
-        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
         //Main game logic
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
         //Run the update function for every object in the current level
         levels.update_all_objects(delta, is_left_pressed, is_right_pressed, is_jump_pressed);
@@ -293,9 +243,8 @@ int main()
 
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-
-
-        //Render
+        //Rendering
+        
         //Clear the previous frame and color the background with light blue
         window.clear(Color(147, 248, 250));
 
@@ -312,8 +261,9 @@ int main()
         delta = delta_clock.restart();
     }
 
-    //Delete the level arrays
+    //Delete the level vectors
     levels.delete_levels();
 
+    //Exit program
     return 1;
 }
