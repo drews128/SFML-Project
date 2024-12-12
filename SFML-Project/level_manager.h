@@ -56,38 +56,6 @@ private:
         new game_object(320, 610, 400, 100, "Platform", Color::Black),
         new game_object(500, 610, 400, 100, "Platform", Color::Black)
     };
-    vector<game_object*> level_5 = {
-        new player(220, 50, 50, 50, "Player", Color::Transparent),
-        new game_object(120, 110, 300, 100, "Platform", Color::Black),
-        //new game_object(500, 710, 400, 100, "Platform", Color::Black),
-
-        new game_object(700, 110, 100, 400, "Platform", Color::Black),
-        new game_object(700, 610, 100, 400, "Platform", Color::Black),
-         new game_object(800, 610, 300, 100, "Platform", Color::Black),
-        new game_object(420, 110, 100, 700, "Platform", Color::Black),
-         new flying_enemy(575, 250, 50, 50, "Enemy", Color::Transparent, 50, 250),
-         new flying_enemy(550, 150, 50, 50, "Enemy", Color::Transparent, 50, 250),
-         new flying_enemy(600, 350, 50, 50, "Enemy", Color::Transparent, 50, 250),
-         new flying_enemy(625, 450, 50, 50, "Enemy", Color::Transparent, 50, 250),
-       new flying_enemy(625, 650, 50, 50, "Enemy", Color::Transparent, 50, 250),
-       new flying_enemy(600, 750, 50, 50, "Enemy", Color::Transparent, 50, 250),
-       new flying_enemy(800, 450, 50, 50, "Enemy", Color::Transparent, 50, 150),
-       new end_goal(950, 300, 50, 50, "End Goal", Color::Transparent, 6),
-    };
-    vector<game_object*> level_6 = {
-          new player(150, 50, 50, 50, "Player", Color::Transparent),
-        new game_object(100, 310, 200, 500, "Platform", Color::Black),
-        new game_object(600, 610, 400, 100, "Platform", Color::Black),
-         new game_object(375, 0, 100, 500, "Platform", Color::Black),
-         new flying_enemy(600, 730, 50, 50, "Enemy", Color::Transparent, -50, 250),
-
-         new flying_enemy(550, 200, 50, 50, "Enemy", Color::Transparent, 50, 250),
-         new flying_enemy(500, 400, 50, 50, "Enemy", Color::Transparent, 50, 250),
-         new flying_enemy(720, 500, 50, 50, "Enemy", Color::Transparent, 50, 250),
-         new flying_enemy(800, 300, 50, 50, "Enemy", Color::Transparent, -50, 250),
-         new end_goal(900, 60, 50, 50, "End Goal", Color::Transparent, 7),
-         new game_object(875, 100, 100, 100, "Platform", Color::Black),
-    };
 
 public:
     //Constructor (default)
