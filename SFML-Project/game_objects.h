@@ -223,7 +223,7 @@ public:
 	}
 };
 
-
+//
 
 
 class enemy : virtual public game_object {
