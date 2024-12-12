@@ -171,6 +171,9 @@ public:
 			else if (get_y_position() > other_position.y) {
 				return 1;
 			}
+			else if (get_y_position() + get_height() < other_position.y + 10) {
+				set_floor_count(get_floor_count() + 1);
+			}
 			return 0;
 		}
 		
