@@ -28,7 +28,7 @@ private:
         new game_object(400, 650, 450, 150, "Platform", Color::Black),
         new game_object(1000, 650, 400, 150, "Platform", Color::Black),
         new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200),
-        
+         
         
     };
     //Level 2 vector
