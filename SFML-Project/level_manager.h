@@ -13,6 +13,7 @@ using namespace std;
 //SFML namespace
 using namespace sf;
 
+//Level manager class
 class level_manager {
 private:
     //Current level pointer
@@ -106,14 +107,9 @@ public:
                         //Check if the object's shape is intersecting the enemies shape
                         if (enmy->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
-
-
                             if (enmy->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize())) {
                                 reset_level();
                             }
-                            
-                            
-                            
                         }
                     }
                 }
@@ -123,10 +119,6 @@ public:
                    
                 }
             }
-
-
-            
-
         }
     }
 
