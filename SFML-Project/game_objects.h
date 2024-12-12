@@ -10,6 +10,7 @@ using namespace std;
 //SFML namespace
 using namespace sf;
 
+//Base game object class
 class game_object {
 protected:
 	Vector2f inital_position; //The inital position of the object. Used to reset the objects position
@@ -81,6 +82,7 @@ public:
 	void set_sprite_position(Vector2f position) { sprite.setPosition(position); };
 };
 
+//Player class
 class player : public game_object {
 protected:
 	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
@@ -188,14 +190,12 @@ public:
 	int get_floor_count() {
 		return floor_count;
 	}
-	
 	int get_left_wall_count() {
 		return left_wall_count;
 	}
 	int get_right_wall_count() {
 		return right_wall_count;
 	}
-
 	int get_ceiling_count() {
 		return ceiling_count;
 	}
@@ -220,57 +220,44 @@ public:
 	}
 };
 
-
-
-
+//Base enemy class
 class enemy : virtual public game_object {
 protected:
 	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
 	int left_wall_count = 0;
 	int right_wall_count = 0;
 	int ceiling_count = 0;
-
 	float y_velocity = 0; //Y velocity
 	float move_speed = 50; //Movement speed
-
 
 	void set_move_speed(float move_speed) {
 		this->move_speed = move_speed;
 	}
 
-	
 public:
 	//Enemy constructor
-	enemy(float x_position, float y_position, float width, float height, string type, Color color, float move_Speed) : game_object(x_position, y_position, width, height, type, color) {
-	
-	}
+	enemy(float x_position, float y_position, float width, float height, string type, Color color, float move_Speed) : game_object(x_position, y_position, width, height, type, color) {};
 	//Default constructor
 	enemy() = default;
 	//Destructor
 	~enemy() {};
 };
 
-
-
+//Ground enemy class -- walks along the ground
 class ground_enemy: public  game_object {
 protected:
 	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
 	int left_wall_count = 0;
 	int right_wall_count = 0;
 	int ceiling_count = 0;
-
 	float y_velocity = 0; //Y velocity
 	float move_speed = 50; //Movement speed
-
 	
 	void set_move_speed(float move_speed) {
 		this->move_speed = move_speed;
 	}
 
 public:
-
-	
-
 
 	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {
 
@@ -346,11 +333,9 @@ public:
 		
 	}
 
-
 	void update_movement(float delta) {
 		shape.move(get_move_speed() * delta, 0);
 	}
-
 
 	void update(float delta) override {
 
@@ -384,12 +369,11 @@ public:
 	~ground_enemy() {};
 };
 	
-
+//Flying enemy -- moves left and right with no gravity
 class flying_enemy: public game_object{
 public:
 	//Flying enemy constructor
 	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {
-		
 		//Load texture image & apply to sprite
 		texture.loadFromFile("flying_enemy.PNG");
 		sprite.setTexture(texture);
@@ -400,18 +384,17 @@ public:
 	~flying_enemy() {};
 
 	void update(float delta) override {
-
-
 		//Update the sprite
 		update_sprite();
 	}
 };
 
-
+//End goal class -- moves on to next level when player touches
 class end_goal : public game_object {
 protected:
 	int level_to_load = 1;
 public:
+	//Constructor
 	end_goal(float x_position, float y_position, float width, float height, string type, Color color, int level) : game_object(x_position,y_position,width,height,type,color) {
 		set_level_to_load(level);
 		texture.loadFromFile("end_goal.PNG");
@@ -419,6 +402,8 @@ public:
 		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
 		sprite.setPosition(x_position, y_position);
 	}
+	//Deconstructor
+	~end_goal();
 
 	//Getter(s)
 	int get_level_to_load() {return level_to_load;}
