@@ -20,20 +20,72 @@ private:
 
     //Level 1 vector
     //IMPORTANT: Player should always be the first element in a level
+    //travel distance = (platform it is on length - 50)/2, has to be spawned on the middle 
     vector<game_object*> level_1 = {
-        new player(10, 650, 50, 50, "Player", Color::Transparent),
+       new player(10, 650, 50, 50, "Player", Color::Transparent),
         new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 2),
         new game_object(0, 750, 250, 50, "Platform", Color::Black),
         new game_object(400, 650, 450, 150, "Platform", Color::Black),
         new game_object(1000, 650, 400, 150, "Platform", Color::Black),
         new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200),
-        new flying_enemy(700, 500, 50, 50, "Enemy", Color::Transparent, 150, 500),
+        
+        
     };
     //Level 2 vector
     vector<game_object*> level_2 = {
+        
+        
+
+        new player(320, 50, 50, 50, "Player", Color::Transparent),
+        new game_object(320, 610, 400, 100, "Platform", Color::Black),
+        new game_object(500, 610, 400, 100, "Platform", Color::Black),
+        new ground_enemy(650, 400, 50, 50, "Enemy", Color::Transparent, 50, 200),
+        new game_object(900, 410, 300, 100, "Platform", Color::Black),
+         new end_goal(1100, 360, 50, 50, "End Goal", Color::Transparent, 3),
+    };
+    vector<game_object*> level_3 = {
+        
+        
+
+        
+
+    };
+    vector<game_object*> level_4 = {
         new player(320, 50, 50, 50, "Player", Color::Transparent),
         new game_object(320, 610, 400, 100, "Platform", Color::Black),
         new game_object(500, 610, 400, 100, "Platform", Color::Black)
+    };
+    vector<game_object*> level_5 = {
+        new player(220, 50, 50, 50, "Player", Color::Transparent),
+        new game_object(120, 110, 300, 100, "Platform", Color::Black),
+        //new game_object(500, 710, 400, 100, "Platform", Color::Black),
+
+        new game_object(700, 110, 100, 400, "Platform", Color::Black),
+        new game_object(700, 610, 100, 400, "Platform", Color::Black),
+         new game_object(800, 610, 300, 100, "Platform", Color::Black),
+        new game_object(420, 110, 100, 700, "Platform", Color::Black),
+         new flying_enemy(575, 250, 50, 50, "Enemy", Color::Transparent, 50, 250),
+         new flying_enemy(550, 150, 50, 50, "Enemy", Color::Transparent, 50, 250),
+         new flying_enemy(600, 350, 50, 50, "Enemy", Color::Transparent, 50, 250),
+         new flying_enemy(625, 450, 50, 50, "Enemy", Color::Transparent, 50, 250),
+       new flying_enemy(625, 650, 50, 50, "Enemy", Color::Transparent, 50, 250),
+       new flying_enemy(600, 750, 50, 50, "Enemy", Color::Transparent, 50, 250),
+       new flying_enemy(800, 450, 50, 50, "Enemy", Color::Transparent, 50, 150),
+       new end_goal(950, 280, 50, 50, "End Goal", Color::Transparent, 6),
+    };
+    vector<game_object*> level_6 = {
+          new player(150, 50, 50, 50, "Player", Color::Transparent),
+        new game_object(100, 310, 200, 500, "Platform", Color::Black),
+        new game_object(600, 610, 400, 100, "Platform", Color::Black),
+         new game_object(375, 0, 100, 500, "Platform", Color::Black),
+         new flying_enemy(600, 730, 50, 50, "Enemy", Color::Transparent, -50, 250),
+
+         new flying_enemy(550, 200, 50, 50, "Enemy", Color::Transparent, 50, 250),
+         new flying_enemy(500, 400, 50, 50, "Enemy", Color::Transparent, 50, 250),
+         new flying_enemy(720, 500, 50, 50, "Enemy", Color::Transparent, 50, 250),
+         new flying_enemy(800, 300, 50, 50, "Enemy", Color::Transparent, -50, 250),
+         new end_goal(900, 60, 50, 50, "End Goal", Color::Transparent, 7),
+         new game_object(875, 100, 100, 100, "Platform", Color::Black),
     };
 
 public:
@@ -217,6 +269,15 @@ public:
             break;
         case 2:
             current_level = &level_2;
+            break;
+        case 3:
+            current_level = &level_3;
+            break;
+        case 4:
+            current_level = &level_4;
+            break;
+        case 5:
+            current_level = &level_5;
             break;
         default:
             cout << "Invalid Level ID: setting to 1 " << endl;

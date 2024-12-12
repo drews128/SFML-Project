@@ -229,6 +229,9 @@ public:
 class enemy : virtual public game_object {
 protected:
 
+	int left_wall_count = 0;
+	int right_wall_count = 0;
+
 	float move_speed = 50; //Movement speed
 	float initial_move_speed = 50;
 	int travel_distance;
@@ -277,7 +280,18 @@ public:
 	void reset_move_speed() {
 		set_move_speed(get_initial_move_speed());
 	}
-	
+	int get_left_wall_count() {
+		return left_wall_count;
+	}
+	int get_right_wall_count() {
+		return right_wall_count;
+	}
+	void set_left_wall_count(int new_num) {
+		left_wall_count = new_num;
+	}
+	void set_right_wall_count(int new_num) {
+		right_wall_count = new_num;
+	}
 	float get_move_speed() {
 		return move_speed;
 	}
@@ -306,8 +320,7 @@ public:
 class ground_enemy: public  enemy {
 protected:
 	int floor_count = 0; //Keeps track of the number of floors the enemy is currently in contact with
-	int left_wall_count = 0;
-	int right_wall_count = 0;
+	
 	int ceiling_count = 0;
 
 	float y_velocity = 0; //Y velocity	
@@ -364,18 +377,7 @@ public:
 	void set_floor_count(int new_floor_count) {
 		floor_count = new_floor_count;
 	}
-	int get_left_wall_count() {
-		return left_wall_count;
-	}
-	int get_right_wall_count() {
-		return right_wall_count;
-	}
-	void set_left_wall_count(int new_num) {
-		left_wall_count = new_num;
-	}
-	void set_right_wall_count(int new_num) {
-		right_wall_count = new_num;
-	}
+
 	void set_ceiling_count(int new_num) {
 		ceiling_count = new_num;
 	}
@@ -436,18 +438,33 @@ public:
 
 	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override {
 		//i changed this function to an int because when it returns, if its 1 it will reset_level, but i cant call that from here
+		//Check if other object is an platform
+		if (type_of_other_object == "Platform") {
+			//Colliding with a wall on the left side of the platform
+			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
+				set_left_wall_count(get_left_wall_count() + 1);
+				change_direction();
+			}
+			//Colliding with a wall on the right side of the platform
+			else if (get_x_position() + get_width() > other_position.x + other_size.x && get_y_position() > other_position.y - (get_height() - 10)) {
+				set_right_wall_count(get_right_wall_count() + 1);
+				change_direction();
+			}
+			
+			
+			return 0;
+		}
+
 		if (type_of_other_object == "Player") {
 			//Colliding with a wall on the left side of the platform
 			if (get_y_position() > other_position.y) {
 				shape.move(2000, 1000);
 				return 0;
 			}
-			else {
-				reset_position();
-				return 1;
-			}
-			return 0;
+			
+			
 		}
+		return 0;
 	}
 };
 
