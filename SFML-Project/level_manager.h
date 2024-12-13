@@ -22,12 +22,18 @@ private:
     //IMPORTANT: Player should always be the first element in a level
     //travel distance = (platform it is on length - 50)/2, has to be spawned on the middle 
     vector<game_object*> level_1 = {
-       new player(10, 650, 50, 50, "Player", Color::Transparent),
+
+        new player(10, 650, 50, 50, "Player", Color::Transparent),
         new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 2),
         new game_object(0, 750, 250, 50, "Platform", Color::Black),
         new game_object(400, 650, 450, 150, "Platform", Color::Black),
         new game_object(1000, 650, 400, 150, "Platform", Color::Black),
         new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200),
+
+
+        
+
+       
     };
     //Level 2 vector
     vector<game_object*> level_2 = {
@@ -43,9 +49,9 @@ private:
         new game_object(120, 110, 300, 100, "Platform", Color::Black),
         //new game_object(500, 710, 400, 100, "Platform", Color::Black),
 
-        new game_object(700, 110, 100, 400, "Platform", Color::Black),
-        new game_object(700, 610, 100, 400, "Platform", Color::Black),
-         new game_object(800, 610, 300, 100, "Platform", Color::Black),
+        new game_object(700, -100, 100, 650, "Platform", Color::Black),
+        new game_object(750, 650, 100, 400, "Platform", Color::Black),
+         new game_object(850, 650, 300, 100, "Platform", Color::Black),
         new game_object(420, 110, 100, 700, "Platform", Color::Black),
          new flying_enemy(575, 250, 50, 50, "Enemy", Color::Transparent, 50, 250),
          new flying_enemy(550, 150, 50, 50, "Enemy", Color::Transparent, 50, 250),
@@ -53,7 +59,7 @@ private:
          new flying_enemy(625, 450, 50, 50, "Enemy", Color::Transparent, 50, 250),
        new flying_enemy(625, 650, 50, 50, "Enemy", Color::Transparent, 50, 250),
        new flying_enemy(600, 750, 50, 50, "Enemy", Color::Transparent, 50, 250),
-       new flying_enemy(800, 450, 50, 50, "Enemy", Color::Transparent, 50, 150),
+       new flying_enemy(800, 500, 50, 50, "Enemy", Color::Transparent, 50, 150),
        new end_goal(950, 280, 50, 50, "End Goal", Color::Transparent, 4),
     };
     //Level 4 vector
@@ -83,7 +89,46 @@ private:
         new end_goal(1150,600,50,50,"End Goal", Color::Transparent, 6),
     };
     vector<game_object*> level_6 = {
-          new player(150, 50, 50, 50, "Player", Color::Transparent),
+          
+
+         new player(10, 650, 50, 50, "Player", Color::Transparent),
+        new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 7),
+
+        //starting platform
+        new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
+        //platform above the starting platform
+        new game_object(-50, 500, 300, 50, "Platform", Color::Transparent),
+        
+        new game_object(400, 650, 150, 150, "Platform", Color::Transparent),
+        new flying_enemy(350, 400, 50, 50, "Enemy", Color::Transparent, 50, 200),
+        new game_object(500, 300, 50, 450, "Platform", Color::Transparent),
+
+        new flying_enemy(550, 300, 50, 50, "Enemy", Color::Transparent, 100, 200),
+        new flying_enemy(350, 200, 50, 50, "Enemy", Color::Transparent, 50, 200),
+        new flying_enemy(750, 350, 50, 50, "Enemy", Color::Transparent, 150, 200),
+
+        new game_object(1000, 650, 400, 150, "Platform", Color::Transparent),
+        new ground_enemy(450, 400, 50, 50, "Enemy", Color::Transparent, 50, 50),
+    };
+    //Level 7 vector
+    vector<game_object*> level_7 = {
+        new player(10, 650, 50, 50, "Player", Color::Transparent),
+        new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 8),
+        new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
+        new game_object(400, 650, 450, 150, "Platform", Color::Transparent),
+        new game_object(1000, 650, 400, 150, "Platform", Color::Transparent),
+        new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200),
+    };
+    vector<game_object*> level_8 = {
+        new player(10, 650, 50, 50, "Player", Color::Transparent),
+        new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 9),
+        new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
+        new game_object(400, 650, 450, 150, "Platform", Color::Transparent),
+        new game_object(1000, 650, 400, 150, "Platform", Color::Transparent),
+        new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200),
+    };
+    vector<game_object*> level_9 = {
+       new player(150, 50, 50, 50, "Player", Color::Transparent),
         new game_object(100, 310, 200, 500, "Platform", Color::Black),
         new game_object(600, 610, 400, 100, "Platform", Color::Black),
          new game_object(375, 0, 100, 500, "Platform", Color::Black),
@@ -93,11 +138,18 @@ private:
          new flying_enemy(500, 400, 50, 50, "Enemy", Color::Transparent, 50, 250),
          new flying_enemy(720, 500, 50, 50, "Enemy", Color::Transparent, 50, 250),
          new flying_enemy(800, 300, 50, 50, "Enemy", Color::Transparent, -50, 250),
-         new end_goal(900, 60, 50, 50, "End Goal", Color::Transparent, 7),
+         new end_goal(900, 60, 50, 50, "End Goal", Color::Transparent, 10),
          new game_object(875, 100, 100, 100, "Platform", Color::Black),
     };
-    //Level 7 vector
-    vector<game_object*> level_7 = {
+    vector<game_object*> level_10 = {
+        new player(10, 650, 50, 50, "Player", Color::Transparent),
+        new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 11),
+        new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
+        new game_object(400, 650, 450, 150, "Platform", Color::Transparent),
+        new game_object(1000, 650, 400, 150, "Platform", Color::Transparent),
+        new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200),
+    };
+    vector<game_object*> end_screen = {
         new player(10, 650, 50, 50, "Player", Color::Transparent),
         new game_object(0,750,1400,50,"Platform",Color::Transparent),
         new game_object(300,200,150,50,"Platform",Color::Transparent),
@@ -114,6 +166,7 @@ private:
         new game_object(900,250,50,150,"Platform",Color::Transparent),
         new game_object(850,400,50,50,"Platform",Color::Transparent),
     };
+
 
 public:
     //Constructor (default)
@@ -271,6 +324,10 @@ public:
         level_5.clear();
         level_6.clear();
         level_7.clear();
+        level_8.clear();
+        level_9.clear();
+        level_10.clear();
+        end_screen.clear();
     }
 
     //Getters & Setters
@@ -306,6 +363,15 @@ public:
         else if (current_level == &level_7) {
             return 7;
         }
+        else if (current_level == &level_8) {
+            return 8;
+        }
+        else if (current_level == &level_9) {
+            return 9;
+        }
+        else if (current_level == &level_10) {
+            return 10;
+        }
         return 1;
     }
     //Setters
@@ -332,6 +398,19 @@ public:
         case 7:
             current_level = &level_7;
             break;
+        case 8:
+            current_level = &level_8;
+            break;
+        case 9:
+            current_level = &level_9;
+            break;
+        case 10:
+            current_level = &level_10;
+            break;
+        case 11:
+            current_level = &end_screen;
+            break;
+
         default:
             cout << "Invalid Level ID: setting to 1 " << endl;
             current_level = &level_1;
