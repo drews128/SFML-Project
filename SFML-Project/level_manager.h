@@ -97,10 +97,10 @@ private:
         //starting platform
         new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
         //platform above the starting platform
-        new game_object(-50, 500, 300, 50, "Platform", Color::Transparent),
+        new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
         
         new game_object(400, 650, 150, 150, "Platform", Color::Transparent),
-        new flying_enemy(350, 400, 50, 50, "Enemy", Color::Transparent, 50, 200, false),
+        new flying_enemy(380, 400, 50, 50, "Enemy", Color::Transparent, -50, 400, false),
         new game_object(500, 300, 50, 450, "Platform", Color::Transparent),
 
         new flying_enemy(550, 300, 50, 50, "Enemy", Color::Transparent, 100, 200, false),
@@ -122,7 +122,7 @@ private:
     vector<game_object*> level_8 = {
         new player(10, 650, 50, 50, "Player", Color::Transparent),
         new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 9),
-        new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
+        new jump_pad(0, 750, 250, 50, "Jump Pad", Color::Transparent, 625),
         new game_object(400, 650, 450, 150, "Platform", Color::Transparent),
         new game_object(1000, 650, 400, 150, "Platform", Color::Transparent),
         new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200, false),
@@ -181,6 +181,7 @@ public:
                 // Update player movement
                 plyr->update_movement(delta.asMicroseconds() / 1'000'000.0f, left_input, right_input, up_input);
                 
+                
             }
             else if (ground_enemy* enmy = dynamic_cast<ground_enemy*>(obj)) {
                 enmy->update_movement(delta.asMicroseconds() / 1'000'000.0f);
@@ -195,6 +196,7 @@ public:
             
             
         }
+        
     }
 
     //Detects collisions between objects every frame
@@ -215,10 +217,17 @@ public:
                         //Check if the object's shape is intersecting the player's shape
                         if (plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
-                            
-                            if (plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize())) {
+                            int on_collision_event = plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
+                            if (on_collision_event == 0) {
                                 //sounds[2].play();
                                 reset_level();
+                            }
+                            else if (on_collision_event == 2) {
+                                if (jump_pad* jmp_pd = dynamic_cast<jump_pad*>((*current_level)[j])) {
+
+                                    plyr->set_jump_force(plyr->get_default_jump_force() - jmp_pd->get_bounce());
+                                   
+                                }
                             }
 
                             //Check if object is the end goal

@@ -57,11 +57,11 @@ int main()
 
 
 
-   
 
-   // get data from file
 
-    
+    // get data from file
+
+
 
     string path = "playerStats.txt";
     ifstream reader;
@@ -87,23 +87,23 @@ int main()
             level = 1;
             cout << "out of range error reverting to 0" << endl;
         }
-       
+
 
         getline(reader, time_i);
         try {
-        
+
             time = stoi(time_i);
-            if (time <0)
+            if (time < 0)
             {
-                time = 0; cout << "reverting time to 0"<<endl;
+                time = 0; cout << "reverting time to 0" << endl;
             }
         }
-        catch(const out_of_range&){ 
+        catch (const out_of_range&) {
             time = 0;
             cout << "overflow error reverting to 0" << endl;
         }
-       
-       
+
+
 
         userOn = name_s;
         levelOn = level;
@@ -119,7 +119,7 @@ int main()
 
         //SOUND
 
-    vector<string> audioFiles = {  
+    vector<string> audioFiles = {
        "jump.wav",   //jump                          0    keycodes for calling sound
        "pop.wav",  //complete level                  1
        "explode.wav", //death                        2
@@ -138,7 +138,7 @@ int main()
         }
         sounds[i].setBuffer(soundBuffers[i]);
     }
-   
+
     sounds[5].setPitch(0.75f); //speed modifier and pitch
     sounds[5].setLoop(true); //loops forever
     sounds[5].setVolume(90.0f); //100 is default and max
@@ -148,22 +148,22 @@ int main()
 
     Clock clock;
 
-    
-     Time time1 = clock.getElapsedTime();
-     Time time2 = clock.restart();
 
-    
-     int hours = timeOn / 3600;
-     int smallMinutes = timeOn / 60;
-     int smallSeconds = timeOn;
-     while (smallMinutes >= 60)
-     {
-         smallMinutes -= 60;
-     }
-     while (smallSeconds > 60)
-     {
-         smallSeconds -= 60;
-     }
+    Time time1 = clock.getElapsedTime();
+    Time time2 = clock.restart();
+
+
+    int hours = timeOn / 3600;
+    int smallMinutes = timeOn / 60;
+    int smallSeconds = timeOn;
+    while (smallMinutes >= 60)
+    {
+        smallMinutes -= 60;
+    }
+    while (smallSeconds > 60)
+    {
+        smallSeconds -= 60;
+    }
 
 
 
@@ -173,42 +173,42 @@ int main()
     level_manager levels = level_manager();
 
 
-   
-   
+
+
     //Inital message
     cout << "Welcome to SFML.SLIME!" << endl;
     //New game or continue
     cout << "1. Start New Game" << endl << "2. Continue From Existing Save File" << endl;
     //Get user selection
     cin >> user_selection;
-    switch(user_selection){
+    switch (user_selection) {
     case 1:
         //New game
         cout << endl << "Enter Your Name:" << endl;
         cin >> player_name;
 
-      
+
 
         levels.set_current_level(1);
 
         break;
     case 2:
-       
 
-   
-        
-            player_name = userOn;
-       //     cout << timeOn<<endl<<" h "<<hours << " m " << smallMinutes << " s "  <<smallSeconds<<endl;
-        
-        //Code for testing only, should be setting it to whatever the saved level id is
+
+
+
+        player_name = userOn;
+        //     cout << timeOn<<endl<<" h "<<hours << " m " << smallMinutes << " s "  <<smallSeconds<<endl;
+
+         //Code for testing only, should be setting it to whatever the saved level id is
         levels.set_current_level(levelOn);
-        cout << "Welcome back " << player_name<<"!"<<endl;
-        cout << "Current Playtime "<<hours<<":"<<smallMinutes<<":"<<smallSeconds<<endl;
-       
-      
+        cout << "Welcome back " << player_name << "!" << endl;
+        cout << "Current Playtime " << hours << ":" << smallMinutes << ":" << smallSeconds << endl;
+
+
         break;
     default:
-        
+
         cout << endl << "Invalid input!" << endl;
         return -1;
         break;
@@ -225,27 +225,36 @@ int main()
     //Time between each frame
     //IMPORTANT: Make sure to mutliply any movement by delta so that it is frame independant!
     Time delta;
-  
 
-  
-   
 
-   
 
-   
+
+
+
+
+
 
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
-
+        //reset player forced jump if not on jump pad
+        game_object* firstObject = levels.get_current_level()->at(0);
+        if (player* plyr = dynamic_cast<player*>(firstObject)) {
+            if ((plyr->get_default_jump_force() <= plyr->get_jump_force())) {
+                is_jump_pressed = false;
+            }
+            else {
+                is_jump_pressed = true;
+            }
+        }
         //Detect user inputs
         while (window.pollEvent(input_event)) {
-
+            
             //Check if inputs pressed down
             if (input_event.type == Event::KeyPressed) {
                 //Left
                 if (input_event.key.code == Keyboard::A || input_event.key.code == Keyboard::Left) {
                     is_left_pressed = true;
-                   
+
                 }
                 //Right
                 if (input_event.key.code == Keyboard::D || input_event.key.code == Keyboard::Right) {
@@ -254,14 +263,15 @@ int main()
                 //Jump
                 if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
                     is_jump_pressed = true;
-                    
-                        sounds[0].play(); //can be pressed forever
-                    
-                  
+
+                    sounds[0].play(); //can be pressed forever
+
+
                 }
             }
             //Check if inputs are released 
             else if (input_event.type == Event::KeyReleased) {
+                
                 //Left
                 if (input_event.key.code == Keyboard::A || input_event.key.code == Keyboard::Left) {
                     is_left_pressed = false;
@@ -272,11 +282,24 @@ int main()
                 }
                 //Jump
                 if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
-                    is_jump_pressed = false;
-                  
-                }
-            }
+                    if (levels.get_current_level()->at(0)) {
+                        
+                        //reference the first element in the condition, which is always the player
 
+                        if (player* plyr = dynamic_cast<player*>(firstObject)) {
+                            if ((plyr->get_default_jump_force() == plyr->get_jump_force())) {
+                                // can only release jump if the player does not have the boost of a jump pad
+                                is_jump_pressed = false;
+                            }
+                        }
+
+                    }
+
+
+                }
+                
+            }
+            
             //Close the window if the close window button is pressed or the escape button is pressed
             if (input_event.type == Event::Closed || (input_event.type == Event::KeyPressed && input_event.key.code == Keyboard::Escape)) {
 
@@ -287,9 +310,9 @@ int main()
                 Time elapsed = clock.getElapsedTime(); //gets current time since program launch
                 int seconds = static_cast<int>(elapsed.asSeconds()); //sets it in seconds
                 timeOn += seconds;
-                
-                saveData(player_name, levelHere,timeOn );
-               
+
+                saveData(player_name, levelHere, timeOn);
+
                 window.close();
             }
         }
@@ -331,4 +354,5 @@ int main()
     levels.delete_levels();
 
     return 1;
+    
 }

@@ -81,6 +81,37 @@ public:
 	void set_sprite_position(Vector2f position) { sprite.setPosition(position); };
 };
 
+
+class jump_pad : public game_object {
+protected:
+	int bounce;
+
+	
+public:
+	void set_bounce(int bounce) {
+		this->bounce = bounce;
+	}
+	int get_bounce() {
+		return bounce;
+	}
+
+
+
+
+	jump_pad(float x_position, float y_position, float width, float height, string type, Color color, int bounce) : game_object(x_position, y_position, width, height, type, color) {
+		set_bounce(bounce);
+
+		texture.loadFromFile("jump_pad.PNG");
+		texture.setRepeated(true);
+		sprite.setTexture(texture);
+		sprite.setScale(3.125, 3.125);
+		sprite.setTextureRect(IntRect(0, 0, width / 3.125, height / 3.125));
+		sprite.setPosition(x_position, y_position);
+	}
+	~jump_pad() {};
+};
+
+
 class player : public game_object {
 protected:
 	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
@@ -89,7 +120,9 @@ protected:
 	int ceiling_count = 0;
 	float move_speed = 300; //Movement speed
 	float jump_force = -1950; //Jump force
+	const float default_jump_force = -1950;
 	float y_velocity = 0; //Y velocity
+
 public:
 	//Constructor
 	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {
@@ -139,7 +172,7 @@ public:
 	//Override on collision function
 	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override{
 		//Check if other object is a platform
-		if (type_of_other_object == "Platform") {
+		if (type_of_other_object == "Platform" || type_of_other_object == "Jump Pad") {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_left_wall_count(get_left_wall_count() + 1);
@@ -151,30 +184,40 @@ public:
 			//Colliding with the floor of a platform
 			else if (get_y_position() + get_height() < other_position.y + 10) {
 				set_floor_count(get_floor_count() + 1);
+				//reset jump force if the player is not on a jump pad
+				if (type_of_other_object == "Jump Pad") {
+					return 2;
+				}
+				else {
+					
+					set_jump_force(get_default_jump_force());
+				}
+				
 			}
 			//Colliding with the ceiling of a platform
 			else if (get_y_position() > other_position.y) {
 				y_velocity = 0;
 			}
-			return 0;
+			return 1;
 		}
 		//i changed this function to an int because when it returns, if its 1 it will reset_level, but i cant call that from here
 		else if (type_of_other_object == "Enemy") {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
-				return 1;
+				return 0;
 			}
 			//Colliding with a wall on the right side of the platform
 			else if (get_x_position() + get_width() > other_position.x + other_size.x && get_y_position() > other_position.y - (get_height() - 10)) {
-				return 1;
+				return 0;
 			}
 			else if (get_y_position() > other_position.y) {
-				return 1;
+				return 0;
 			}
 			else if (get_y_position() + get_height() < other_position.y + 10) {
 				set_floor_count(get_floor_count() + 1);
+				set_jump_force(get_default_jump_force());
 			}
-			return 0;
+			return 1;
 		}
 		
 	}
@@ -187,7 +230,17 @@ public:
 		set_ceiling_count(0);
 	}
 
+	void set_jump_force(float jump_force) {
+		this->jump_force = jump_force;
+	}
+
 	//Getters
+	float get_default_jump_force() {
+		return default_jump_force;
+	}
+	float get_jump_force() {
+		return jump_force;
+	}
 	int get_floor_count() {
 		return floor_count;
 	}
