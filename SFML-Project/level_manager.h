@@ -217,12 +217,12 @@ public:
                         //Check if the object's shape is intersecting the player's shape
                         if (plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
-                            int on_collision_event = plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize());
-                            if (on_collision_event == 0) {
+                            
+                            if (plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize()) == 0) {
                                 //sounds[2].play();
                                 reset_level();
                             }
-                            else if (on_collision_event == 2) {
+                            else if (plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize()) == 2) {
                                 if (jump_pad* jmp_pd = dynamic_cast<jump_pad*>((*current_level)[j])) {
 
                                     plyr->set_jump_force(plyr->get_default_jump_force() - jmp_pd->get_bounce());

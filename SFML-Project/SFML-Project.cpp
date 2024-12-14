@@ -3,6 +3,8 @@
 #include <vector>
 #include <fstream>
 #include <time.h>
+#include <sstream>
+
 
 using namespace std;
 
@@ -23,12 +25,12 @@ using namespace sf;
 //file out function
 void saveData(string player_name,int levelHere, int timeOn) {
     string path = "playerStats.txt";
-    ofstream reader;
-    reader.open(path);
-    if(reader.is_open())
+    ofstream writer;
+    writer.open(path);
+    if(writer.is_open())
     {
        
-        reader << player_name << "," << levelHere <<","<< timeOn;
+        writer << player_name << "," << levelHere << "," << timeOn;
                     
     }
     else
@@ -38,7 +40,35 @@ void saveData(string player_name,int levelHere, int timeOn) {
 
 }
 
-
+void delete_save() {
+    string path = "playerStats.txt";
+    string name , line;
+    int level, seconds;
+    string level_string, seconds_string;
+    ifstream reader; // Open file in truncate mode
+    reader.open(path);
+    if (reader.is_open()) {
+        while (getline(reader, line)) {
+            stringstream ss(line);
+            getline(ss, name, ',');
+            getline(ss, level_string, ',');
+            stringstream level_stream(level_string);
+            level_stream >> level;
+            getline(ss, seconds_string, ',');
+            stringstream seconds_stream(seconds_string);
+            seconds_stream >> seconds;
+            reader.close();
+        }
+    }
+    else {
+        cout << "Could not find player in file." << endl;
+    }
+    ofstream writer;
+    writer.open(path);
+    if (writer.is_open()) {
+        writer << name << ',' << 1  << ',' << seconds;
+    }
+}
 
 
 int main()
@@ -239,13 +269,21 @@ int main()
         //reset player forced jump if not on jump pad, otherwise force a jump
         game_object* firstObject = levels.get_current_level()->at(0);
         if (player* plyr = dynamic_cast<player*>(firstObject)) {
-            if ((plyr->get_default_jump_force() <= plyr->get_jump_force())) {
+            
+            if (!plyr->get_force_bounce()) {
                 is_jump_pressed = false;
             }
             else {
                 is_jump_pressed = true;
             }
+            if (plyr->get_health() <= 0) {
+                window.close();
+                delete_save();
+                cout << "GAME OVER" << endl;
+            }
         }
+        
+        
         //Detect user inputs
         while (window.pollEvent(input_event)) {
             

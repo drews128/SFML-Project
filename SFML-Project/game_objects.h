@@ -123,6 +123,8 @@ protected:
 	const float default_jump_force = -1950;
 	float y_velocity = 0; //Y velocity
 
+	bool force_bounce;
+
 	int health = 3;
 	void set_health(int health) {
 		if (health <= 3) {
@@ -195,8 +197,10 @@ public:
 			//Colliding with the floor of a platform
 			else if (get_y_position() + get_height() < other_position.y + 10) {
 				set_floor_count(get_floor_count() + 1);
+				set_force_bounce(false);
 				//reset jump force if the player is not on a jump pad
 				if (type_of_other_object == "Jump Pad") {
+					set_force_bounce(true);
 					return 2;
 				}
 				else {
@@ -228,8 +232,10 @@ public:
 				return 0;
 			}
 			else if (get_y_position() + get_height() < other_position.y + 10) {
-				set_floor_count(get_floor_count() + 1);
+				
 				set_jump_force(get_default_jump_force());
+				set_floor_count(get_floor_count() + 1);
+				set_force_bounce(true);
 			}
 			return 1;
 		}
@@ -271,7 +277,13 @@ public:
 		set_health(get_health() + health);
 		update_player_sprite();
 	}
+	void set_force_bounce(bool force_bounce) {
+		this->force_bounce = force_bounce;
+	}
 	//Getters
+	bool get_force_bounce() {
+		return force_bounce;
+	}
 	int get_health() {
 		return health;
 	}
