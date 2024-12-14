@@ -234,6 +234,7 @@ protected:
 
 	float move_speed = 50; //Movement speed
 	float initial_move_speed = 50;
+	bool invincible;
 	int travel_distance;
 
 	void set_initial_move_speed(float initial_move_speed) {
@@ -243,7 +244,9 @@ protected:
 		this->move_speed = move_speed;
 		
 	}
-	
+	void set_invincible(bool invincible) {
+		this->invincible = invincible;
+	}
 
 	void set_travel_distance(int flying_distance) {
 		this->travel_distance = flying_distance;
@@ -271,6 +274,9 @@ public:
 
 	virtual int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) { return 0; }
 
+	bool get_invincible() {
+		return invincible;
+	}
 	int get_travel_distance() {
 		return travel_distance;
 	}
@@ -304,10 +310,11 @@ public:
 	}
 
 	//Enemy constructor
-	enemy(float x_position, float y_position, float width, float height, string type, Color color, float move_speed, int travel_distance) : game_object(x_position, y_position, width, height, type, color) {
+	enemy(float x_position, float y_position, float width, float height, string type, Color color, float move_speed, int travel_distance, bool invincible) : game_object(x_position, y_position, width, height, type, color) {
 		set_move_speed(move_speed);
 		set_travel_distance(travel_distance);
 		set_initial_move_speed(move_speed);
+		set_invincible(invincible);
 	}
 	//Default constructor
 	enemy() = default;
@@ -354,13 +361,22 @@ public:
 		else if (type_of_other_object == "Player") {
 			//Colliding with a wall on the left side of the platform
 			if (get_y_position() > other_position.y) {
-				shape.move(2000, 1000);
-				return 0;
+				if (get_invincible()) {
+					return 1;
+				}
+				else {
+					shape.move(2000, 1000);
+					return 0;
+				}
+				
 			}
 			else {
-				reset_position();
+				 reset_position();
 				return 1;
+				
 			}
+			
+			
 			return 0;
 		}
 
@@ -404,9 +420,15 @@ public:
 
 	//Ground enemy constructor
 
-	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed, int travel_distance) : enemy(x_position, y_position, width, height, type, color, move_speed, travel_distance), game_object(x_position, y_position, width, height, type, color) {
+	ground_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed, int travel_distance, bool invincible) : enemy(x_position, y_position, width, height, type, color, move_speed, travel_distance, invincible), game_object(x_position, y_position, width, height, type, color) {
 		//Load texture image & apply to sprite
-		texture.loadFromFile("ground_enemy.PNG");
+		if (invincible) {
+			texture.loadFromFile("invincible_ground_enemy.PNG");
+		}
+		else {
+			texture.loadFromFile("ground_enemy.PNG");
+		}
+		
 		sprite.setTexture(texture);
 		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
 		sprite.setPosition(x_position, y_position);
@@ -420,9 +442,15 @@ class flying_enemy: public enemy{
 public:
 
 	//Flying enemy constructor
-	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed, int travel_distance) : enemy(x_position, y_position, width, height, type, color, move_speed, travel_distance), game_object(x_position, y_position, width, height, type, color) {
+	flying_enemy(float x_position, float y_position, float width, float height, string type, Color color, int move_speed, int travel_distance, bool invincible) : enemy(x_position, y_position, width, height, type, color, move_speed, travel_distance, invincible), game_object(x_position, y_position, width, height, type, color) {
 		//Load texture image & apply to sprite
-		texture.loadFromFile("flying_enemy.PNG");
+		if (invincible) {
+			texture.loadFromFile("invincible_flying_enemy.PNG");
+		}
+		else {
+			texture.loadFromFile("flying_enemy.PNG");
+		}
+		
 		sprite.setTexture(texture);
 		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
 		sprite.setPosition(x_position, y_position);
@@ -457,9 +485,18 @@ public:
 
 		if (type_of_other_object == "Player") {
 			//Colliding with a wall on the left side of the platform
-			if (get_y_position() > other_position.y) {
-				shape.move(2000, 1000);
-				return 0;
+			if (get_invincible()) {
+				return 1;
+			}
+			else {
+				if (get_y_position() > other_position.y) {
+					shape.move(2000, 1000);
+					return 0;
+				}
+				else {
+					// reset_position();
+					return 1;
+				}
 			}
 			
 			
