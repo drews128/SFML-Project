@@ -97,7 +97,7 @@ private:
         //starting platform
         new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
         //platform above the starting platform
-        new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
+        new game_object(0, 550, 250, 50, "Platform", Color::Transparent),
         
         new game_object(400, 650, 150, 150, "Platform", Color::Transparent),
         new flying_enemy(380, 400, 50, 50, "Enemy", Color::Transparent, -50, 400, false),
@@ -239,6 +239,7 @@ public:
 
                 //Check if the player is currently out of bounds
                 if (plyr->get_y_position() > 1000) {
+                    
                     reset_level();
                 }
             }
@@ -320,6 +321,9 @@ public:
             //resets the direction an enemy is traveling 
             if (enemy* enmy = dynamic_cast<enemy*>((*current_level)[i]) ) {
                  enmy->reset_move_speed();
+            }
+            else if (player* plyr = dynamic_cast<player*>((*current_level)[i])) {
+                plyr->loose_heart();
             }
         }
     }

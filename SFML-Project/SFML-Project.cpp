@@ -236,7 +236,7 @@ int main()
 
     //Main game loop -- exits when the window is closed
     while (window.isOpen()) {
-        //reset player forced jump if not on jump pad
+        //reset player forced jump if not on jump pad, otherwise force a jump
         game_object* firstObject = levels.get_current_level()->at(0);
         if (player* plyr = dynamic_cast<player*>(firstObject)) {
             if ((plyr->get_default_jump_force() <= plyr->get_jump_force())) {

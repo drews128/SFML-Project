@@ -123,10 +123,21 @@ protected:
 	const float default_jump_force = -1950;
 	float y_velocity = 0; //Y velocity
 
+	int health = 3;
+	void set_health(int health) {
+		if (health <= 3) {
+			this->health = health;
+		}
+		
+
+	}
+
 public:
+
+
 	//Constructor
 	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {
-		texture.loadFromFile("player.PNG");
+		texture.loadFromFile("full_health_player.PNG");
 		sprite.setTexture(texture);
 		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
 		sprite.setPosition(x_position, y_position);
@@ -204,13 +215,16 @@ public:
 		else if (type_of_other_object == "Enemy") {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
+				
 				return 0;
 			}
 			//Colliding with a wall on the right side of the platform
 			else if (get_x_position() + get_width() > other_position.x + other_size.x && get_y_position() > other_position.y - (get_height() - 10)) {
+				
 				return 0;
 			}
 			else if (get_y_position() > other_position.y) {
+				
 				return 0;
 			}
 			else if (get_y_position() + get_height() < other_position.y + 10) {
@@ -230,11 +244,38 @@ public:
 		set_ceiling_count(0);
 	}
 
+
+
 	void set_jump_force(float jump_force) {
 		this->jump_force = jump_force;
 	}
-
+	void update_player_sprite() {
+		if (get_health() >= 3) {
+			texture.loadFromFile("full_health_player.PNG");
+			sprite.setTexture(texture);
+		}
+		else if (get_health() == 2) {
+			texture.loadFromFile("mid_health_player.PNG");
+			sprite.setTexture(texture);
+		}
+		else if (get_health() == 1) {
+			texture.loadFromFile("low_health_player.PNG");
+			sprite.setTexture(texture);
+		}
+	}
+	void loose_heart() {
+		set_health(get_health() - 1);
+		update_player_sprite();
+	}
+	void add_health(int health) {
+		set_health(get_health() + health);
+		update_player_sprite();
+	}
 	//Getters
+	int get_health() {
+		return health;
+	}
+
 	float get_default_jump_force() {
 		return default_jump_force;
 	}
