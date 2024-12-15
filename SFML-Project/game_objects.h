@@ -40,7 +40,7 @@ public:
 	~game_object(){};
 
 	//Called every frame (delta is the time between frame in seconds)
-	virtual void update(float delta) {}
+	virtual void update(float delta) { update_sprite();  }
 
 	//Called every time a collision is detected by the level manager
 	virtual int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {return 0;}
@@ -81,6 +81,52 @@ public:
 	void set_sprite_position(Vector2f position) { sprite.setPosition(position); };
 };
 
+class health_pickup : public game_object {
+protected:
+
+public:
+
+	health_pickup(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {
+		texture.loadFromFile("health_pickup.PNG");
+		sprite.setTexture(texture);
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+		sprite.setPosition(x_position, y_position);
+	}
+
+	~health_pickup() {};
+};
+
+class jump_pad : public game_object {
+protected:
+	int bounce;
+
+	
+public:
+	void set_bounce(int bounce) {
+		this->bounce = bounce;
+	}
+	int get_bounce() {
+		return bounce;
+	}
+
+	
+
+
+
+	jump_pad(float x_position, float y_position, float width, float height, string type, Color color, int bounce) : game_object(x_position, y_position, width, height, type, color) {
+		set_bounce(bounce);
+
+		texture.loadFromFile("jump_pad.PNG");
+		texture.setRepeated(true);
+		sprite.setTexture(texture);
+		sprite.setScale(3.125, 3.125);
+		sprite.setTextureRect(IntRect(0, 0, width / 3.125, height / 3.125));
+		sprite.setPosition(x_position, y_position);
+	}
+	~jump_pad() {};
+};
+
+
 class player : public game_object {
 protected:
 	int floor_count = 0; //Keeps track of the number of floors the player is currently in contact with
@@ -89,11 +135,27 @@ protected:
 	int ceiling_count = 0;
 	float move_speed = 300; //Movement speed
 	float jump_force = -1950; //Jump force
+	const float default_jump_force = -1950;
 	float y_velocity = 0; //Y velocity
+
+	bool force_bounce = false;
+	bool on_down_pressed = false;
+
+	int health = 3;
+	void set_health(int health) {
+		if (health <= 3) {
+			this->health = health;
+		}
+		
+	}
+	
+
 public:
+
+
 	//Constructor
 	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {
-		texture.loadFromFile("player.PNG");
+		texture.loadFromFile("full_health_player.PNG");
 		sprite.setTexture(texture);
 		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
 		sprite.setPosition(x_position, y_position);
@@ -121,25 +183,31 @@ public:
 	}
 
 	//Update player's movement
-	void update_movement(float delta, bool left, bool right, bool up) {
+	void update_movement(float delta, bool left, bool right, bool up, bool down) {
 		//Left pressed and not colliding with a wall
-		if (left && get_right_wall_count() < 1)
+		if (left && get_right_wall_count() < 1) {
 			//Move player
-			shape.move(-1 * get_move_speed() * delta,0);
+			shape.move(-1 * get_move_speed() * delta, 0);
+		}
 		//Right pressed and not colliding with a wall
-		if (right && get_left_wall_count() < 1)
+		if (right && get_left_wall_count() < 1) {
 			//Move player
 			shape.move(1 * get_move_speed() * delta, 0);
+		}
 		//Jump pressed and on a floor
-		if (get_floor_count() >= 1 && up)
+		if (get_floor_count() >= 1 && up) {
 			//Set y velocity to the jump_force
 			y_velocity = jump_force;
+		}
+		
+		set_on_down_pressed(down);
+		
 	}
 
 	//Override on collision function
 	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override{
 		//Check if other object is a platform
-		if (type_of_other_object == "Platform") {
+		if (type_of_other_object == "Platform" || type_of_other_object == "Jump Pad") {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_left_wall_count(get_left_wall_count() + 1);
@@ -151,30 +219,47 @@ public:
 			//Colliding with the floor of a platform
 			else if (get_y_position() + get_height() < other_position.y + 10) {
 				set_floor_count(get_floor_count() + 1);
+				set_force_bounce(false);
+				//reset jump force if the player is not on a jump pad
+				if (type_of_other_object == "Jump Pad") {
+					set_force_bounce(true);
+					return 2;
+				}
+				else {
+					
+					set_jump_force(get_default_jump_force());
+				}
+				
 			}
 			//Colliding with the ceiling of a platform
 			else if (get_y_position() > other_position.y) {
 				y_velocity = 0;
 			}
-			return 0;
+			return 1;
 		}
 		//i changed this function to an int because when it returns, if its 1 it will reset_level, but i cant call that from here
 		else if (type_of_other_object == "Enemy") {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
-				return 1;
+				
+				return 0;
 			}
 			//Colliding with a wall on the right side of the platform
 			else if (get_x_position() + get_width() > other_position.x + other_size.x && get_y_position() > other_position.y - (get_height() - 10)) {
-				return 1;
+				
+				return 0;
 			}
 			else if (get_y_position() > other_position.y) {
-				return 1;
+				
+				return 0;
 			}
 			else if (get_y_position() + get_height() < other_position.y + 10) {
+				
+				set_jump_force(get_default_jump_force());
 				set_floor_count(get_floor_count() + 1);
+				set_force_bounce(true);
 			}
-			return 0;
+			return 1;
 		}
 		
 	}
@@ -187,7 +272,56 @@ public:
 		set_ceiling_count(0);
 	}
 
+	void set_on_down_pressed(bool on_down_pressed) {
+		this->on_down_pressed = on_down_pressed;
+	}
+
+	void set_jump_force(float jump_force) {
+		this->jump_force = jump_force;
+	}
+	void update_player_sprite() {
+		if (get_health() >= 3) {
+			texture.loadFromFile("full_health_player.PNG");
+			sprite.setTexture(texture);
+		}
+		else if (get_health() == 2) {
+			texture.loadFromFile("mid_health_player.PNG");
+			sprite.setTexture(texture);
+		}
+		else if (get_health() == 1) {
+			texture.loadFromFile("low_health_player.PNG");
+			sprite.setTexture(texture);
+		}
+	}
+	void loose_heart() {
+		set_health(get_health() - 1);
+		update_player_sprite();
+	}
+	void add_health(int health) {
+		set_health(get_health() + health);
+		update_player_sprite();
+	}
+	void set_force_bounce(bool force_bounce) {
+		this->force_bounce = force_bounce;
+	}
 	//Getters
+
+	bool get_on_down_pressed() {
+		return on_down_pressed;
+	}
+	bool get_force_bounce() {
+		return force_bounce;
+	}
+	int get_health() {
+		return health;
+	}
+
+	float get_default_jump_force() {
+		return default_jump_force;
+	}
+	float get_jump_force() {
+		return jump_force;
+	}
 	int get_floor_count() {
 		return floor_count;
 	}
@@ -337,7 +471,7 @@ public:
 	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override {
 
 		//Check if other object is an platform
-		if (type_of_other_object == "Platform") {
+		if (type_of_other_object == "Platform" || type_of_other_object == "Health Pickup") {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_left_wall_count(get_left_wall_count() + 1);
@@ -467,7 +601,7 @@ public:
 	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override {
 		//i changed this function to an int because when it returns, if its 1 it will reset_level, but i cant call that from here
 		//Check if other object is an platform
-		if (type_of_other_object == "Platform") {
+		if (type_of_other_object == "Platform" || type_of_other_object == "Health Pickup") {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_left_wall_count(get_left_wall_count() + 1);

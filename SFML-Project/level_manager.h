@@ -97,10 +97,10 @@ private:
         //starting platform
         new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
         //platform above the starting platform
-        new game_object(-50, 500, 300, 50, "Platform", Color::Transparent),
+        new game_object(0, 550, 250, 50, "Platform", Color::Transparent),
         
         new game_object(400, 650, 150, 150, "Platform", Color::Transparent),
-        new flying_enemy(350, 400, 50, 50, "Enemy", Color::Transparent, 50, 200, false),
+        new flying_enemy(380, 400, 50, 50, "Enemy", Color::Transparent, -50, 400, false),
         new game_object(500, 300, 50, 450, "Platform", Color::Transparent),
 
         new flying_enemy(550, 300, 50, 50, "Enemy", Color::Transparent, 100, 200, false),
@@ -117,12 +117,13 @@ private:
         new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
         new game_object(400, 650, 450, 150, "Platform", Color::Transparent),
         new game_object(1000, 650, 400, 150, "Platform", Color::Transparent),
-        new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200, true),
+        new health_pickup(600, 600, 50, 50, "Health Pickup", Color::Transparent),
+        new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, -50, 200, true),
     };
     vector<game_object*> level_8 = {
         new player(10, 650, 50, 50, "Player", Color::Transparent),
         new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 9),
-        new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
+        new jump_pad(0, 750, 250, 50, "Jump Pad", Color::Transparent, 625),
         new game_object(400, 650, 450, 150, "Platform", Color::Transparent),
         new game_object(1000, 650, 400, 150, "Platform", Color::Transparent),
         new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200, false),
@@ -173,13 +174,14 @@ public:
     level_manager() = default;
 
     //Run update function for all objects in the current level
-    void update_all_objects(Time delta, bool left_input, bool right_input, bool up_input) {
+    void update_all_objects(Time delta, bool left_input, bool right_input, bool up_input, bool down_input) {
         if (!current_level) return; // No level set
 
         for (auto obj : *current_level) {
             if (player* plyr = dynamic_cast<player*>(obj) ) {
                 // Update player movement
-                plyr->update_movement(delta.asMicroseconds() / 1'000'000.0f, left_input, right_input, up_input);
+                plyr->update_movement(delta.asMicroseconds() / 1'000'000.0f, left_input, right_input, up_input, down_input);
+                
                 
             }
             else if (ground_enemy* enmy = dynamic_cast<ground_enemy*>(obj)) {
@@ -195,6 +197,7 @@ public:
             
             
         }
+        
     }
 
     //Detects collisions between objects every frame
@@ -216,20 +219,33 @@ public:
                         if (plyr->get_shape().getGlobalBounds().intersects((*current_level)[j]->get_shape().getGlobalBounds())) {
                             //Call the on_collision function
                             
-                            if (plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize())) {
+                            if (plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize()) == 0) {
                                 //sounds[2].play();
                                 reset_level();
                             }
+                            else if (plyr->on_collision((*current_level)[j]->get_type(), (*current_level)[j]->get_shape().getPosition(), (*current_level)[j]->get_shape().getSize()) == 2) {
+                                if (jump_pad* jmp_pd = dynamic_cast<jump_pad*>((*current_level)[j])) {
 
+                                    plyr->set_jump_force(plyr->get_default_jump_force() - jmp_pd->get_bounce());
+                                   
+                                }
+                            }
+                            if (health_pickup* pickup = dynamic_cast<health_pickup*>((*current_level)[j])) {
+                                plyr->add_health(1);
+                                pickup->set_position(2000, 2000);
+                            }
                             //Check if object is the end goal
-                            if (end_goal* goal = dynamic_cast<end_goal*>((*current_level)[j]))
+                            if (end_goal* goal = dynamic_cast<end_goal*>((*current_level)[j])) {
                                 set_current_level(goal->get_level_to_load());
+                            }
+                            
                         }
                     }
                 }
 
                 //Check if the player is currently out of bounds
                 if (plyr->get_y_position() > 1000) {
+                    
                     reset_level();
                 }
             }
@@ -298,9 +314,6 @@ public:
                 */
             }
 
-
-            
-
         }
     }
 
@@ -311,6 +324,9 @@ public:
             //resets the direction an enemy is traveling 
             if (enemy* enmy = dynamic_cast<enemy*>((*current_level)[i]) ) {
                  enmy->reset_move_speed();
+            }
+            else if (player* plyr = dynamic_cast<player*>((*current_level)[i])) {
+                plyr->loose_heart();
             }
         }
     }
