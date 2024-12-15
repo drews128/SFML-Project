@@ -100,7 +100,7 @@ class jump_pad : public game_object {
 protected:
 	int bounce;
 
-	
+
 public:
 	void set_bounce(int bounce) {
 		this->bounce = bounce;
@@ -109,7 +109,7 @@ public:
 		return bounce;
 	}
 
-	
+
 
 
 
