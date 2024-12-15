@@ -124,6 +124,7 @@ protected:
 	float y_velocity = 0; //Y velocity
 
 	bool force_bounce;
+	bool on_down_pressed;
 
 	int health = 3;
 	void set_health(int health) {
@@ -131,8 +132,8 @@ protected:
 			this->health = health;
 		}
 		
-
 	}
+	
 
 public:
 
@@ -167,19 +168,25 @@ public:
 	}
 
 	//Update player's movement
-	void update_movement(float delta, bool left, bool right, bool up) {
+	void update_movement(float delta, bool left, bool right, bool up, bool down) {
 		//Left pressed and not colliding with a wall
-		if (left && get_right_wall_count() < 1)
+		if (left && get_right_wall_count() < 1) {
 			//Move player
-			shape.move(-1 * get_move_speed() * delta,0);
+			shape.move(-1 * get_move_speed() * delta, 0);
+		}
 		//Right pressed and not colliding with a wall
-		if (right && get_left_wall_count() < 1)
+		if (right && get_left_wall_count() < 1) {
 			//Move player
 			shape.move(1 * get_move_speed() * delta, 0);
+		}
 		//Jump pressed and on a floor
-		if (get_floor_count() >= 1 && up)
+		if (get_floor_count() >= 1 && up) {
 			//Set y velocity to the jump_force
 			y_velocity = jump_force;
+		}
+		
+		set_on_down_pressed(down);
+		
 	}
 
 	//Override on collision function
@@ -250,7 +257,9 @@ public:
 		set_ceiling_count(0);
 	}
 
-
+	void set_on_down_pressed(bool on_down_pressed) {
+		this->on_down_pressed = on_down_pressed;
+	}
 
 	void set_jump_force(float jump_force) {
 		this->jump_force = jump_force;
@@ -281,6 +290,10 @@ public:
 		this->force_bounce = force_bounce;
 	}
 	//Getters
+
+	bool get_on_down_pressed() {
+		return on_down_pressed;
+	}
 	bool get_force_bounce() {
 		return force_bounce;
 	}

@@ -173,13 +173,13 @@ public:
     level_manager() = default;
 
     //Run update function for all objects in the current level
-    void update_all_objects(Time delta, bool left_input, bool right_input, bool up_input) {
+    void update_all_objects(Time delta, bool left_input, bool right_input, bool up_input, bool down_input) {
         if (!current_level) return; // No level set
 
         for (auto obj : *current_level) {
             if (player* plyr = dynamic_cast<player*>(obj) ) {
                 // Update player movement
-                plyr->update_movement(delta.asMicroseconds() / 1'000'000.0f, left_input, right_input, up_input);
+                plyr->update_movement(delta.asMicroseconds() / 1'000'000.0f, left_input, right_input, up_input, down_input);
                 
                 
             }

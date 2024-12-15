@@ -80,6 +80,7 @@ int main()
     bool is_left_pressed = false;
     bool is_right_pressed = false;
     bool is_jump_pressed = false;
+    bool is_down_pressed = false;
     //file variables
     string userOn;
     int levelOn, timeOn;
@@ -270,7 +271,7 @@ int main()
         game_object* firstObject = levels.get_current_level()->at(0);
         if (player* plyr = dynamic_cast<player*>(firstObject)) {
             
-            if (!plyr->get_force_bounce()) {
+            if (!plyr->get_force_bounce() || plyr->get_on_down_pressed()) {
                 is_jump_pressed = false;
             }
             else {
@@ -306,6 +307,10 @@ int main()
 
 
                 }
+                if (input_event.key.code == Keyboard::S  || input_event.key.code == Keyboard::Down) {
+                    is_down_pressed = true;
+                }
+
             }
             //Check if inputs are released 
             else if (input_event.type == Event::KeyReleased) {
@@ -318,6 +323,10 @@ int main()
                 if (input_event.key.code == Keyboard::D || input_event.key.code == Keyboard::Right) {
                     is_right_pressed = false;
                 }
+                if (input_event.key.code == Keyboard::S || input_event.key.code == Keyboard::Down) {
+                    is_down_pressed = false;
+
+                }
                 //Jump
                 if (input_event.key.code == Keyboard::W || input_event.key.code == Keyboard::Space || input_event.key.code == Keyboard::Up) {
                     if (levels.get_current_level()->at(0)) {
@@ -325,7 +334,7 @@ int main()
                         //reference the first element in the condition, which is always the player
 
                         if (player* plyr = dynamic_cast<player*>(firstObject)) {
-                            if ((plyr->get_default_jump_force() == plyr->get_jump_force())) {
+                            if (!plyr->get_force_bounce()) {
                                 // can only release jump if the player does not have the boost of a jump pad
                                 is_jump_pressed = false;
                             }
@@ -362,7 +371,7 @@ int main()
         //Main game logic
 
         //Run the update function for every object in the current level
-        levels.update_all_objects(delta, is_left_pressed, is_right_pressed, is_jump_pressed);
+        levels.update_all_objects(delta, is_left_pressed, is_right_pressed, is_jump_pressed, is_down_pressed);
 
         //Check for collisions between all objects
         levels.detect_collisions();
