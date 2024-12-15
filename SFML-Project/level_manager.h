@@ -117,7 +117,8 @@ private:
         new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
         new game_object(400, 650, 450, 150, "Platform", Color::Transparent),
         new game_object(1000, 650, 400, 150, "Platform", Color::Transparent),
-        new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200, true),
+        new health_pickup(600, 600, 50, 50, "Health Pickup", Color::Transparent),
+        new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, -50, 200, true),
     };
     vector<game_object*> level_8 = {
         new player(10, 650, 50, 50, "Player", Color::Transparent),
@@ -229,10 +230,15 @@ public:
                                    
                                 }
                             }
-
+                            if (health_pickup* pickup = dynamic_cast<health_pickup*>((*current_level)[j])) {
+                                plyr->add_health(1);
+                                pickup->set_position(2000, 2000);
+                            }
                             //Check if object is the end goal
-                            if (end_goal* goal = dynamic_cast<end_goal*>((*current_level)[j]))
+                            if (end_goal* goal = dynamic_cast<end_goal*>((*current_level)[j])) {
                                 set_current_level(goal->get_level_to_load());
+                            }
+                            
                         }
                     }
                 }
@@ -307,9 +313,6 @@ public:
                 }
                 */
             }
-
-
-            
 
         }
     }

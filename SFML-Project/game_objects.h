@@ -40,7 +40,7 @@ public:
 	~game_object(){};
 
 	//Called every frame (delta is the time between frame in seconds)
-	virtual void update(float delta) {}
+	virtual void update(float delta) { update_sprite();  }
 
 	//Called every time a collision is detected by the level manager
 	virtual int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) {return 0;}
@@ -81,6 +81,20 @@ public:
 	void set_sprite_position(Vector2f position) { sprite.setPosition(position); };
 };
 
+class health_pickup : public game_object {
+protected:
+
+public:
+
+	health_pickup(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position, y_position, width, height, type, color) {
+		texture.loadFromFile("health_pickup.PNG");
+		sprite.setTexture(texture);
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+		sprite.setPosition(x_position, y_position);
+	}
+
+	~health_pickup() {};
+};
 
 class jump_pad : public game_object {
 protected:
@@ -95,6 +109,7 @@ public:
 		return bounce;
 	}
 
+	
 
 
 
@@ -123,8 +138,8 @@ protected:
 	const float default_jump_force = -1950;
 	float y_velocity = 0; //Y velocity
 
-	bool force_bounce;
-	bool on_down_pressed;
+	bool force_bounce = false;
+	bool on_down_pressed = false;
 
 	int health = 3;
 	void set_health(int health) {
@@ -456,7 +471,7 @@ public:
 	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override {
 
 		//Check if other object is an platform
-		if (type_of_other_object == "Platform") {
+		if (type_of_other_object == "Platform" || type_of_other_object == "Health Pickup") {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_left_wall_count(get_left_wall_count() + 1);
@@ -586,7 +601,7 @@ public:
 	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override {
 		//i changed this function to an int because when it returns, if its 1 it will reset_level, but i cant call that from here
 		//Check if other object is an platform
-		if (type_of_other_object == "Platform") {
+		if (type_of_other_object == "Platform" || type_of_other_object == "Health Pickup") {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_left_wall_count(get_left_wall_count() + 1);
