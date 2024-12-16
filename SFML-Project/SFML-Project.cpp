@@ -85,7 +85,12 @@ int main()
     string userOn;
     int levelOn, timeOn;
 
+    Texture background_texture;
+    background_texture.loadFromFile("sky.JPG");
 
+    // Create a sprite and set the texture
+    Sprite background_sprite;
+    background_sprite.setTexture(background_texture);
 
 
 
@@ -382,8 +387,8 @@ int main()
 
         //Render
         //Clear the previous frame and color the background with light blue
-        window.clear(Color(147, 248, 250));
-
+        window.clear();
+        window.draw(background_sprite);
         //Draw every object in the level
         for (auto obj : *levels.get_current_level()) {
             window.draw(obj->get_shape());

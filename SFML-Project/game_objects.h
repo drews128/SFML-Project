@@ -96,11 +96,37 @@ public:
 	~health_pickup() {};
 };
 
+class speed_pickup : public game_object {
+protected:
+	int time;
+
+	void set_time(int time) {
+		this->time = time;
+	}
+
+public:
+
+	int get_time() {
+		return time;
+	}
+
+	speed_pickup(float x_position, float y_position, float width, float height, string type, Color color, int time) : game_object(x_position, y_position, width, height, type, color) {
+		texture.loadFromFile("speed_pickup.PNG");
+		sprite.setTexture(texture);
+		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
+		sprite.setPosition(x_position, y_position);
+
+		set_time(time);
+	}
+
+	~speed_pickup() {};
+};
+
 class jump_pad : public game_object {
 protected:
 	int bounce;
 
-	
+
 public:
 	void set_bounce(int bounce) {
 		this->bounce = bounce;
@@ -109,7 +135,7 @@ public:
 		return bounce;
 	}
 
-	
+
 
 
 
@@ -133,7 +159,14 @@ protected:
 	int left_wall_count = 0;
 	int right_wall_count = 0;
 	int ceiling_count = 0;
-	float move_speed = 300; //Movement speed
+	enum move_speeds {
+		slowed = 150,
+		normal = 300,
+		boosted = 600
+	};
+	float move_speed = static_cast<float>(move_speeds::normal); //Movement speed
+	
+
 	float jump_force = -1950; //Jump force
 	const float default_jump_force = -1950;
 	float y_velocity = 0; //Y velocity
@@ -336,6 +369,7 @@ public:
 	int get_ceiling_count() {
 		return ceiling_count;
 	}
+
 	float get_move_speed() {
 		return move_speed;
 	}
@@ -352,9 +386,16 @@ public:
 	void set_ceiling_count(int new_num) {
 		ceiling_count = new_num;
 	}
-	void set_move_speed(float new_move_speed) {
-		move_speed = new_move_speed;
+	void boost_move_speed() {
+		move_speed = static_cast<float>(move_speeds::boosted);
 	}
+	void normal_move_speed() {
+		move_speed = static_cast<float>(move_speeds::normal);
+	}
+	void slow_move_speed() {
+		move_speed = static_cast<float>(move_speeds::slowed);
+	}
+	
 };
 
 
@@ -471,7 +512,7 @@ public:
 	int on_collision(string type_of_other_object, Vector2f other_position, Vector2f other_size) override {
 
 		//Check if other object is an platform
-		if (type_of_other_object == "Platform" || type_of_other_object == "Health Pickup") {
+		if (type_of_other_object == "Platform" || type_of_other_object == "Pickup" ) {
 			//Colliding with a wall on the left side of the platform
 			if (get_x_position() < other_position.x && get_y_position() > other_position.y - (get_height() - 10)) {
 				set_left_wall_count(get_left_wall_count() + 1);
