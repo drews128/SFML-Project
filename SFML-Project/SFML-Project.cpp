@@ -85,6 +85,8 @@ int main()
     string userOn;
     int levelOn, timeOn;
 
+
+    //sky background
     Texture background_texture;
     background_texture.loadFromFile("sky.JPG");
 
@@ -275,7 +277,8 @@ int main()
         //reset player forced jump if not on jump pad, otherwise force a jump
         game_object* firstObject = levels.get_current_level()->at(0);
         if (player* plyr = dynamic_cast<player*>(firstObject)) {
-            
+            plyr->preload_player_sprites();
+            plyr->update_powerups();
             if (!plyr->get_force_bounce() || plyr->get_on_down_pressed()) {
                 is_jump_pressed = false;
             }
@@ -379,7 +382,7 @@ int main()
         levels.update_all_objects(delta, is_left_pressed, is_right_pressed, is_jump_pressed, is_down_pressed);
 
         //Check for collisions between all objects
-        levels.detect_collisions();
+        levels.detect_collisions(delta);
 
         //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
