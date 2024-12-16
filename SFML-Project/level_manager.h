@@ -17,7 +17,7 @@ class level_manager {
 private:
     //Current level pointer
     vector<game_object*>* current_level = nullptr;
-
+    //screen size is 1400 by 800 (1400 wide, 800 tall). i recommend using desmos or geogebra to visualize how you want a level to look and then copy down the cords into the vector
     //Level 1 vector
     //IMPORTANT: Player should always be the first element in a level
     //travel distance = (platform it is on length - 50)/2, has to be spawned on the middle 
@@ -45,7 +45,21 @@ private:
          new end_goal(1100, 360, 50, 50, "End Goal", Color::Transparent, 3),
     };
     vector<game_object*> level_3 = {
-        new player(220, 50, 50, 50, "Player", Color::Transparent),
+       new player(10, 650, 50, 50, "Player", Color::Transparent),
+        new game_object(0,750,250,50,"Platform",Color::Transparent),
+        new game_object(350,650,250,50,"Platform",Color::Transparent),
+        new ground_enemy(450, 600, 50, 50, "Enemy", Color::Transparent, 50, 100, false),
+        new game_object(650,250,100,700,"Platform",Color::Transparent),
+        new game_object(0,500,250,50,"Platform",Color::Transparent),
+        new game_object(350,350,150,50,"Platform",Color::Transparent),
+        new game_object(550,200,300,50,"Platform",Color::Transparent),
+        new flying_enemy(675,100,50,50,"Enemy",Color::Transparent,150,200, false),
+        new game_object(1000,500,300,50,"Platform",Color::Transparent),
+        new end_goal(1150,450,50,50,"End Goal", Color::Transparent, 5),
+    };
+    //Level 4 vector
+    vector<game_object*> level_4 = {
+          new player(220, 50, 50, 50, "Player", Color::Transparent),
         new game_object(120, 110, 300, 100, "Platform", Color::Black),
         //new game_object(500, 710, 400, 100, "Platform", Color::Black),
 
@@ -61,20 +75,6 @@ private:
        new flying_enemy(600, 750, 50, 50, "Enemy", Color::Transparent, 50, 250, false),
        new flying_enemy(800, 500, 50, 50, "Enemy", Color::Transparent, 50, 150, false),
        new end_goal(950, 280, 50, 50, "End Goal", Color::Transparent, 4),
-    };
-    //Level 4 vector
-    vector<game_object*> level_4 = {
-        new player(10, 650, 50, 50, "Player", Color::Transparent),
-        new game_object(0,750,250,50,"Platform",Color::Transparent),
-        new game_object(350,650,250,50,"Platform",Color::Transparent),
-        new ground_enemy(450, 600, 50, 50, "Enemy", Color::Transparent, 50, 100, false),
-        new game_object(650,250,100,700,"Platform",Color::Transparent),
-        new game_object(0,500,250,50,"Platform",Color::Transparent),
-        new game_object(350,350,150,50,"Platform",Color::Transparent),
-        new game_object(550,200,300,50,"Platform",Color::Transparent),
-        new flying_enemy(675,100,50,50,"Enemy",Color::Transparent,150,200, false),
-        new game_object(1000,500,300,50,"Platform",Color::Transparent),
-        new end_goal(1150,450,50,50,"End Goal", Color::Transparent, 5),
     };
     //Level 5 vector
     vector<game_object*> level_5 = {
@@ -123,7 +123,7 @@ private:
     vector<game_object*> level_8 = {
         new player(10, 650, 50, 50, "Player", Color::Transparent),
         new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 9),
-        new jump_pad(0, 750, 250, 50, "Jump Pad", Color::Transparent, 625),
+        new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
         new game_object(400, 650, 450, 150, "Platform", Color::Transparent),
         new game_object(1000, 650, 400, 150, "Platform", Color::Transparent),
         new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200, false),
@@ -143,12 +143,26 @@ private:
          new game_object(875, 100, 100, 100, "Platform", Color::Black),
     };
     vector<game_object*> level_10 = {
-        new player(10, 650, 50, 50, "Player", Color::Transparent),
-        new end_goal(1300, 600, 50, 50, "End Goal", Color::Transparent, 11),
-        new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
-        new game_object(400, 650, 450, 150, "Platform", Color::Transparent),
-        new game_object(1000, 650, 400, 150, "Platform", Color::Transparent),
-        new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, 50, 200, false),
+        new player(25, 0, 50, 50, "Player", Color::Transparent),
+        new game_object(0, 150, 100, 100, "Platform", Color::Transparent),
+
+        new flying_enemy(325, 225, 50, 50, "Enemy", Color::Transparent, -300, 300, false),
+        new game_object(400, 0, 100, 300, "Platform", Color::Transparent),
+       new game_object(300, 300, 50, 50, "Platform", Color::Transparent),
+       new game_object(10, 500, 100, 50, "Platform", Color::Transparent),
+       new game_object(10, 500, 20, 250, "Platform", Color::Transparent),
+       new game_object(10, 750, 70, 50, "Platform", Color::Transparent),
+       new game_object(200, 580, 50, 50, "Platform", Color::Transparent),
+       new speed_pickup(25, 700, 50, 50, "Pickup", Color::Transparent, 2000),
+       new jump_pad(700, 750, 50, 50, "Jump Pad", Color::Transparent, 300),
+       new game_object(800, 550, 50, 400, "Platform", Color::Transparent),
+       new health_pickup(800, 500, 50, 50, "Pickup", Color::Transparent),
+       new jump_pad(1100, 700, 100, 100, "Jump Pad", Color::Transparent, 500),
+       new flying_enemy(1125, 500, 50, 50, "Enemy", Color::Transparent, -100, 225, false),
+       new flying_enemy(1125, 350, 50, 50, "Enemy", Color::Transparent, -200, 225, false),
+       new flying_enemy(1125, 200, 50, 50, "Enemy", Color::Transparent, -300, 225, false),
+       new end_goal(1100, 100, 50, 50, "End Goal", Color::Transparent, 11),
+
     };
     vector<game_object*> end_screen = {
         new player(10, 650, 50, 50, "Player", Color::Transparent),
