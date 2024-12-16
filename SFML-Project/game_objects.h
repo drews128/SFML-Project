@@ -98,25 +98,25 @@ public:
 
 class speed_pickup : public game_object {
 protected:
-	int time;
+	int duration;
 
-	void set_time(int time) {
-		this->time = time;
+	void set_duration(int duration) {
+		this->duration = duration;
 	}
 
 public:
 
-	int get_time() {
-		return time;
+	int get_duration() {
+		return duration;
 	}
 
-	speed_pickup(float x_position, float y_position, float width, float height, string type, Color color, int time) : game_object(x_position, y_position, width, height, type, color) {
+	speed_pickup(float x_position, float y_position, float width, float height, string type, Color color, int duration) : game_object(x_position, y_position, width, height, type, color) {
 		texture.loadFromFile("speed_pickup.PNG");
 		sprite.setTexture(texture);
 		sprite.setScale(width / texture.getSize().x, height / texture.getSize().y);
 		sprite.setPosition(x_position, y_position);
 
-		set_time(time);
+		set_duration(duration);
 	}
 
 	~speed_pickup() {};
@@ -166,6 +166,8 @@ protected:
 	};
 	float move_speed = static_cast<float>(move_speeds::normal); //Movement speed
 	
+	int power_up_duration;
+	
 
 	float jump_force = -1950; //Jump force
 	const float default_jump_force = -1950;
@@ -185,6 +187,7 @@ protected:
 
 public:
 
+	map<int, Texture> health_textures;
 
 	//Constructor
 	player(float x_position, float y_position, float width, float height, string type, Color color) : game_object(x_position,y_position,width,height,type,color)  {
@@ -305,25 +308,36 @@ public:
 		set_ceiling_count(0);
 	}
 
-	void set_on_down_pressed(bool on_down_pressed) {
-		this->on_down_pressed = on_down_pressed;
-	}
-
+	
 	void set_jump_force(float jump_force) {
 		this->jump_force = jump_force;
 	}
+	
+
+	void preload_player_sprites() {
+		Texture texture;
+		texture.loadFromFile("full_health_player.PNG");
+		health_textures[3] = texture;
+
+		texture.loadFromFile("mid_health_player.PNG");
+		health_textures[2] = texture;
+
+		texture.loadFromFile("low_health_player.PNG");
+		health_textures[1] = texture;
+	}
+
 	void update_player_sprite() {
-		if (get_health() >= 3) {
-			texture.loadFromFile("full_health_player.PNG");
-			sprite.setTexture(texture);
+		sprite.setTexture(health_textures[get_health()]);
+	}
+	void update_powerups( ) {
+		if (get_powerup_duration() > 0) {
+			set_power_up_duration(get_powerup_duration() - 1);
 		}
-		else if (get_health() == 2) {
-			texture.loadFromFile("mid_health_player.PNG");
-			sprite.setTexture(texture);
-		}
-		else if (get_health() == 1) {
-			texture.loadFromFile("low_health_player.PNG");
-			sprite.setTexture(texture);
+		
+
+		if ( get_powerup_duration() <= 0) {
+			normal_move_speed();
+			//other future powerups;
 		}
 	}
 	void loose_heart() {
@@ -334,9 +348,7 @@ public:
 		set_health(get_health() + health);
 		update_player_sprite();
 	}
-	void set_force_bounce(bool force_bounce) {
-		this->force_bounce = force_bounce;
-	}
+	
 	//Getters
 
 	bool get_on_down_pressed() {
@@ -373,7 +385,23 @@ public:
 	float get_move_speed() {
 		return move_speed;
 	}
+	int get_powerup_duration() {
+		return power_up_duration;
+	}
+	
 	//Setters
+	void set_on_down_pressed(bool on_down_pressed) {
+		this->on_down_pressed = on_down_pressed;
+	}
+	void set_force_bounce(bool force_bounce) {
+		this->force_bounce = force_bounce;
+	}
+	
+	void set_power_up_duration(int power_up_duration) {
+		if (power_up_duration > 0) {
+			this->power_up_duration = power_up_duration;
+		}
+	}
 	void set_floor_count(int new_floor_count) {
 		floor_count = new_floor_count;
 	}
