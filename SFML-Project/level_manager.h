@@ -117,7 +117,7 @@ private:
         new game_object(0, 750, 250, 50, "Platform", Color::Transparent),
         new game_object(400, 650, 450, 150, "Platform", Color::Transparent),
         new game_object(1000, 650, 400, 150, "Platform", Color::Transparent),
-        new health_pickup(600, 600, 50, 50, "Health Pickup", Color::Transparent),
+        new speed_pickup(600, 600, 50, 50, "Pickup", Color::Transparent, 10),
         new ground_enemy(600, 400, 50, 50, "Enemy", Color::Transparent, -50, 200, true),
     };
     vector<game_object*> level_8 = {
@@ -230,9 +230,13 @@ public:
                                    
                                 }
                             }
-                            if (health_pickup* pickup = dynamic_cast<health_pickup*>((*current_level)[j])) {
+                            if (health_pickup* hlth_pickup = dynamic_cast<health_pickup*>((*current_level)[j])) {
                                 plyr->add_health(1);
-                                pickup->set_position(2000, 2000);
+                                hlth_pickup->set_position(2000, 2000);
+                            }
+                            else if (speed_pickup* spd_pickup = dynamic_cast<speed_pickup*>((*current_level)[j])) {
+                                plyr->boost_move_speed();
+                                spd_pickup->set_position(2000, 2000);
                             }
                             //Check if object is the end goal
                             if (end_goal* goal = dynamic_cast<end_goal*>((*current_level)[j])) {
@@ -327,6 +331,7 @@ public:
             }
             else if (player* plyr = dynamic_cast<player*>((*current_level)[i])) {
                 plyr->loose_heart();
+                plyr->normal_move_speed();
             }
         }
     }
